@@ -1,54 +1,41 @@
-create database if not exists questionario;
+create database questionario;
 use questionario;
 
 drop table if exists user;
 
-create table user (
-	id int NOT NULL auto_increment,
-	username varchar(50) unique not null,
-	nome varchar(50) not null,
-	cognome varchar(50) not null,
-	email varchar(80) unique,
-	password varchar(80) not null,
-	eta int,
-	genere char(1),
-	primary key(id)
-) auto_increment=1;
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `username` varchar(50) NOT NULL,
+  `password` char(68) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-insert into user (username, nome, cognome, email, password, eta, genere)
-values ('user_mario', 'Mario', 'Rossi', 'mario@questionario.com', 'test123', null, null),
-('user_luigi', 'Luigi', 'Rossi', 'luigi@questionario.com', 'test123', null, 'M'),
-('user_daisy', 'Daisy', 'Principessa', 'daisy@questionario.com', 'test123', null, 'F');
+-- Dumping data for table `users`
+-- NOTE: The passwords are encrypted using BCrypt
+-- A generation tool is avail at: http://www.luv2code.com/generate-bcrypt-password
+-- Default passwords here are: fun123
+
+INSERT INTO `users` 
+VALUES 
+('john','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1),
+('mary','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1),
+('susan','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1);
 
 
+DROP TABLE IF EXISTS `authorities`;
+CREATE TABLE `authorities` (
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
+  UNIQUE KEY `authorities_idx_1` (`username`,`authority`),
+  CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-create table role (
-	id int NOT NULL AUTO_INCREMENT,
-	name varchar(50) DEFAULT NULL,
-	PRIMARY KEY (id)
-) AUTO_INCREMENT=1;
+-- Dumping data for table `authorities`
 
-insert into role (name) values ('ROLE_UTENTE'),('ROLE_ADMIN'),('ROLE_GUEST');
-
-create table users_roles (
-	user_id int not null,
-    role_id int not null,
-    
-    primary key (user_id, role_id),
-    
-    constraint FK_USER foreign key (user_id)
-    references user(id)
-    on update no action on delete no action,
-    
-    constraint FK_ROLE foreign key (role_id)
-    references role(id)
-    on update no action on delete no action
-);
-
-insert into users_roles (user_id, role_id)
-values
-(1,1),
-(1,2),
-(2,1),
-(3,1);
-
+INSERT INTO `authorities` 
+VALUES 
+('john','ROLE_UTENTE'),
+('mary','ROLE_UTENTE'),
+('mary','ROLE_ADMIN'),
+('susan','ROLE_UTENTE');
