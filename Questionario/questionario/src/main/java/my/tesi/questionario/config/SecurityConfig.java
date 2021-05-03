@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.authorizeRequests()
+			.antMatchers("/resources/**").permitAll()
 			.antMatchers("/").hasRole("UTENTE")
 			.and()
 			.formLogin()
@@ -46,7 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.permitAll()
 			.and()
 			.logout().permitAll();
-		
 		
 	}
 	
