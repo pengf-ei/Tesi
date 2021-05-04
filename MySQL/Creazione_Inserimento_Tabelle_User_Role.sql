@@ -1,26 +1,24 @@
 create database questionario;
 use questionario;
 
-drop table if exists user;
-
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `password` char(68) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `cognome` varchar(50) NOT NULL,
+  `email` varchar(50) UNIQUE,
+  `eta` int,
+  `genere` char(1),
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table `users`
--- NOTE: The passwords are encrypted using BCrypt
--- A generation tool is avail at: http://www.luv2code.com/generate-bcrypt-password
--- Default passwords here are: fun123
-
 INSERT INTO `users` 
 VALUES 
-('john','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1),
-('mary','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1),
-('susan','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1);
+('john','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1, 'Jonathan', 'Smile', 'jonathan@questionario.com', 25, 'M'),
+('mary','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1, 'Mary', 'Smith', 'mary@questionario.com', 35, 'F'),
+('susan','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K',1, 'Susan', 'White', 'susan@questionario.com', NULL, 'F');
 
 
 DROP TABLE IF EXISTS `authorities`;

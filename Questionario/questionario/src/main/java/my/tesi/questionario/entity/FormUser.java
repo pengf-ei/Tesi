@@ -44,6 +44,8 @@ public class FormUser {
 	
 	private String genere;
 	
+	private int enabled;
+	
 	public FormUser() {
 		
 	}
@@ -53,7 +55,9 @@ public class FormUser {
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName.toLowerCase();
+		if(userName != null) {
+			this.userName = userName.toLowerCase();
+		}
 	}
 
 	public String getPassword() {
@@ -93,7 +97,9 @@ public class FormUser {
 	}
 
 	public void setEmail(String email) {
-		this.email = email.toLowerCase();
+		if(email != null) {
+			this.email = email.toLowerCase();
+		}
 	}
 
 	public int getEta() {
@@ -110,6 +116,14 @@ public class FormUser {
 
 	public void setGenere(String genere) {		
 		this.genere = genere;
+	}
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
 	}
 	
 

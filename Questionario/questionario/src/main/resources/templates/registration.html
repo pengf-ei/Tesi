@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
 	
@@ -164,9 +165,17 @@
 				                <input type="radio" id="female" name="female" class="custom-control-input" value="F" th:field="*{genere}">
 				                <label class="custom-control-label" for="female">F</label>
 				            </div>
+				            <div class="custom-control custom-radio custom-control-inline">
+				                <input type="radio" id="nd" name="nd" class="custom-control-input" value="" th:field="*{genere}">
+				                <label class="custom-control-label" for="nd">N.D.</label>
+				            </div>
 				
 				        </div>
-						
+				        
+				        
+						<div sec:authorize="hasRole('ROLE_ADMIN')">
+  							<input type="hidden" id="enabled" name="enabled" th:value="1">
+						</div>
 						
 						<!-- Register Button -->
 						<div style="margin-top: 10px" class="form-group">						

@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +45,7 @@ public class RegistrationController {
 	@PostMapping("/processForm")
 	public String processForm(@Valid @ModelAttribute("formUser") FormUser formUser, 
 			BindingResult theBindingResult, 
-			Model theModel) {
+			Model theModel, Authentication authentication) {
 		
 		
 		 if (theBindingResult.hasErrors()) {
@@ -63,6 +64,19 @@ public class RegistrationController {
 		 
 		 userService.save(formUser);
 		
-		 return "registration-success";
+		 // se utente registrato da admin reindirizzo ad un altra pagina
+		 try {
+			if ( authentication.getAuthorities().toString().contains("ADMIN") ) {
+				 
+				 return "registration-success";
+			 }
+		} catch (Exception e) {
+			
+		}
+		    	 
+		 
+		 theModel.addAttribute("registrationSuccess", "Utenza registrata.");
+		 
+		 return "login-bootstrap";
 	}
 }

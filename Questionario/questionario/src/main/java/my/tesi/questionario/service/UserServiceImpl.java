@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 		
 		theUser.setUserName(theFormUser.getUserName());
 		theUser.setPassword(passwordEncoder.encode(theFormUser.getPassword()));
-		theUser.setEnabled(1);
+		theUser.setEnabled(theFormUser.getEnabled());
 		theUser.setNome(theFormUser.getNome());
 		theUser.setCognome(theFormUser.getCognome());
 		theUser.setEmail(theFormUser.getEmail());

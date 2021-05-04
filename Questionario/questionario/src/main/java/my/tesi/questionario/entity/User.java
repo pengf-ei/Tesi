@@ -22,7 +22,7 @@ public class User {
 	private String password;
 	
 	@Column(name="enabled")
-	private int enabled = 1;
+	private int enabled = 0;
 	
 	@Column(name="nome")
 	private String nome;

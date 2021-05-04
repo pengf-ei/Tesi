@@ -1,5 +1,6 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <!-- Required meta tags -->
 <meta charset="utf-8">
@@ -98,6 +99,10 @@ body {
 			<div th:if="${param.logout}"
 				class="alert alert-success form-floating">Logout effettuato
 				con successo.</div>
+				
+			<!-- Check for Registrazione OK -->
+			<div th:if="${registrationSuccess}"
+				class="alert alert-success form-floating" sec:authorize="isAnonymous()">Registrazione avvenuta.<br>Attendere l'attivazione.</div>
 
 
 			<div class="form-floating">
