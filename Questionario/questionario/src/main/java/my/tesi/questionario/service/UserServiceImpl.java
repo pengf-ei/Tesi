@@ -1,6 +1,9 @@
 package my.tesi.questionario.service;
 
+import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public User findByUserName(String userName) {
 		Optional<User> result = userRepository.findById(userName);
 		
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void save(FormUser theFormUser) {
 		
 		User theUser = new User();
@@ -65,6 +70,20 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(theUser);
 		
 	}
+
+	@Override
+	public List<User> findNotEnabled() {
+		return userRepository.findNotEnabled();
+	}
+
+	@Override
+	@Transactional
+	public void setUserEnabled(String username) {
+		userRepository.setUserEnabled(username);
+		
+	}
+	
+	
 
 
 

@@ -1,47 +1,46 @@
 package my.tesi.questionario.controller;
 
-import javax.validation.Valid;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import my.tesi.questionario.entity.FormUser;
 import my.tesi.questionario.entity.User;
 import my.tesi.questionario.service.UserService;
 
 @Controller
-@RequestMapping("/registration")
-public class RegistrationController {
+@RequestMapping("/enable")
+public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@InitBinder
-	public void initBinder(WebDataBinder dataBinder) {
-		
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		
-		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}
 
-	@GetMapping("/showForm")
+	@GetMapping("/users-list")
 	public String showForm(Model theModel) {
 		
-		theModel.addAttribute("formUser", new FormUser());
+		List<User> usersNotEnabled = userService.findNotEnabled();
 		
-		return "registration-bootstrap";
+		
+		theModel.addAttribute("usersNotEnabled", usersNotEnabled);
+		
+		return "users-not-enabled-list";
+		
 	}
 	
+	@GetMapping("/users-list/active")
+	public String showForm(@RequestParam("userName") String username) {
+		
+		userService.setUserEnabled(username);		
+		
+		return "redirect:/enable/users-list";
+		
+	}
+	
+	/*
 	@PostMapping("/processForm")
 	public String processForm(@Valid @ModelAttribute("formUser") FormUser formUser, 
 			BindingResult theBindingResult, 
@@ -79,4 +78,5 @@ public class RegistrationController {
 		 
 		 return "login-bootstrap";
 	}
+	*/
 }

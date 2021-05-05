@@ -11,14 +11,14 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-	<title>Lista Sessioni - Questionario</title>
+	<title>Lista Utenti non abilitati - Questionario</title>
 </head>
 
 <body>
 
 <div class="container">
 
-	<h3>Lista Sessioni</h3>
+	<h3>Lista Utenti non abilitati</h3>
 	<hr>
 	
 	<div>
@@ -37,20 +37,31 @@
 	<table class="table table-bordered table-striped">
 		<thead class="thead-dark">
 			<tr>
-				<th>Id</th>
-				<th>Inizio</th>
-				<th>Fine</th>
-				<th>Nome Sessione</th>
+				<th>Username</th>
+				<th>Nome</th>
+				<th>Cognome</th>
+				<th>Email</th>
+				<th>Età</th>
+				<th>Genere</th>
+				<th>Abilitazione</th>
 			</tr>
 		</thead>
 		
 		<tbody>
-			<tr th:each="tempSessione : ${sessioni}">
+			<tr th:each="tempUser : ${usersNotEnabled}">
 			
-				<td th:text="${tempSessione.id}" />	
-				<td th:text="${tempSessione.inizio}" />	
-				<td th:text="${tempSessione.fine}" />	
-				<td th:text="${tempSessione.nomesessione}"/>
+				<td th:text="${tempUser.userName}" />	
+				<td th:text="${tempUser.nome}" />	
+				<td th:text="${tempUser.cognome}" />	
+				<td th:text="${tempUser.email}"/>
+				<td th:text="${tempUser.eta}"/>
+				<td th:text="${tempUser.genere}"/>
+				<td>
+					<a th:href="@{/enable/users-list/active(userName=${tempUser.userName})}"
+						   class="btn btn-info btn-sm">
+							Abilita
+						</a>
+				</td>
 				
 				
 			</tr>

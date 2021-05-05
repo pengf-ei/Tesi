@@ -29,6 +29,7 @@ public class QuestionarioController {
 		sessioni = questionarioService.findSessioni();
 		
 		theModel.addAttribute("sessioni", sessioni);
+
 		
 		return "index";
 	}

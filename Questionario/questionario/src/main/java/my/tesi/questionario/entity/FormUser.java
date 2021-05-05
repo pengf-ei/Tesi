@@ -9,32 +9,32 @@ import my.tesi.questionario.validation.FieldMatch;
 import my.tesi.questionario.validation.ValidEmail;
 
 @FieldMatch.List({
-    @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")
+    @FieldMatch(first = "password", second = "matchingPassword", message = " non corrispodono")
 })
 public class FormUser {
 	
 	@NotNull(message = "- campo richiesto")
-	@Size(min = 1, message = "is required")
+	@Size(min = 1, message = "lunghezza invalida")
 	private String userName;
 
 	@NotNull(message = "- campo richiesto")
-	@Size(min = 1, message = "is required")
+	@Size(min = 1, message = "lunghezza invalida")
 	private String password;
 	
 	@NotNull(message = "- campo richiesto")
-	@Size(min = 1, message = "is required")
+	@Size(min = 1, message = "lunghezza invalida")
 	private String matchingPassword;
 	
 	@NotNull(message = "- campo richiesto")
-	@Size(min = 1, message = "is required")
+	@Size(min = 1, message = "lunghezza invalida")
 	private String nome;
 	
 	@NotNull(message = "- campo richiesto")
-	@Size(min = 1, message = "is required")
+	@Size(min = 1, message = "lunghezza invalida")
 	private String cognome;
 	
-	@ValidEmail(message = "Email invalido")
-	@NotNull(message = "is required")
+	@ValidEmail(message = "- invalido")
+	@NotNull(message = "- campo richiesto")
 	@Size(min = 1, message = "- campo richiesto")
 	private String email;
 
