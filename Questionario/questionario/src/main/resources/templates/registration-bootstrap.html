@@ -60,6 +60,7 @@
 
       <h2>Registrazione Utente</h2>
       <p class="lead">Inserire tutte le informazione neccessarie per la registrazione.</p>
+      <p class="lead" sec:authorize="hasRole('ROLE_ADMIN')">Utente registrato sarà automaticamente abilitato.</p>
     </div>
 
     <div class="row g-5">
@@ -135,9 +136,9 @@
 
 
         <div class="col-sm-6">
-              <label for="genere" class="form-label">Sesso <span class="text-muted">(Optional)</span></label>
+              <label for="genere" class="form-label">Sesso <span class="text-muted">(Opzionale)</span></label>
               <select class="form-select" th:field="*{genere}">
-                <option value="">Choose...</option>
+                <option value="">Scegliere...</option>
                 <option value="M">Maschile</option>
                 <option value="F">Femminile</option>
               </select>
@@ -174,6 +175,7 @@
           <hr class="my-4">
 
           <button class="w-100 btn btn-primary btn-lg" type="submit">Continua</button>
+          <a th:href="@{/}" class="w-100 btn btn-outline-secondary btn-lg mt-2" sec:authorize="hasRole('ROLE_ADMIN')">Home</a>
         </form>
       </div>
     </div>

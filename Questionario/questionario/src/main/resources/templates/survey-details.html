@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    
+	<title>Accesso al Questionario - Questionario</title>
+</head>
+
+<body>
+
+<div class="container">
+
+	<h3 th:text="'Questionario ' + ${questionario.titolo}"></h3>
+	<hr>
+	
+	<div>
+		User: <span sec:authentication="name"></span>
+		<br>
+		Role(s): <span sec:authentication="principal.authorities"></span>
+		<br><br>
+	</div>
+	
+	
+	<div sec:authorize="hasRole('ROLE_ADMIN')">
+		<a th:href="@{/registration/showForm}"><button class="btn btn-success mb-3">Crea Utente</button></a>
+		<a th:href="@{/enable/users-list}"><button class="btn btn-success mb-3">Abilitazioni Utente</button></a>
+	</div>
+	
+	
+	
+ <table class="table table-bordered">
+		<thead class="table-light">
+			<tr>
+				<th class="col-sm-6">Domande</th>
+				<th>Risposte</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr th:each="tempDomanda : ${questionario.domande}">
+			
+				<td th:text="${tempDomandaStat.index +1} + '. ' + ${tempDomanda.domanda}" />
+				<td>
+				
+					<div class="form-check" th:each="tempRisposta : ${tempDomanda.risposte}" th:if="${tempRisposta.tipo == 'radio'}">
+						<input class="form-check-input" type="radio" th:name="'answer' + ${tempDomanda.id_domanda}" th:value="${tempRisposta.id_risposta}" th:id="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}">
+						<label class="form-check-label" th:for="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}" th:text="${tempRispostaStat.index + 1} + '. ' + ${tempRisposta.desrisposta}" ></label>
+					</div>
+					
+					<div th:if="${not #lists.isEmpty(tempDomanda.risposte)}">
+		 				<select class="form-select" aria-label="Default select example" th:if="${tempDomanda.risposte[0].tipo == 'list'}">
+							<option value="">Scegliere...</option>
+							<option th:each="tempRisposta : ${tempDomanda.risposte}" th:value="${tempRisposta.id_risposta}" th:text="${tempRispostaStat.index + 1} + '. ' + ${tempRisposta.desrisposta}"></option>
+						</select>
+					</div>
+					
+					<div class="form-check" th:each="tempRisposta : ${tempDomanda.risposte}" th:if="${tempRisposta.tipo == 'multi'}">
+						<input class="form-check-input" type="checkbox" th:value="${tempRisposta.id_risposta}" th:id="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}">
+						<label class="form-check-label" th:for="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}" th:text="${tempRispostaStat.index + 1} + '. ' + ${tempRisposta.desrisposta}"></label>
+					</div>
+					
+					<div class="form-group" th:each="tempRisposta : ${tempDomanda.risposte}" th:if="${tempRisposta.tipo == 'open'}">
+					    <label th:for="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}">Inserire risposta</label>
+					    <textarea class="form-control" th:id="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}" rows="3"></textarea>
+				  	</div>
+					
+				</td>
+							
+			</tr>
+		</tbody>		
+	</table>
+	
+	
+	<!-- Add a logout button -->
+	<form action="#" th:action="@{/logout}" 
+			   method="POST">
+	
+		<input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+		<a th:href="@{/}" class="btn btn-outline-primary mt-2">Home</a>
+	
+	</form>
+
+	
+	
+</div>
+	
+</body>
+</html>
+
+
+
