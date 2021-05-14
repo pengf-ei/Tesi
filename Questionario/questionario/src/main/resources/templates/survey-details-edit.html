@@ -11,14 +11,14 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
     
-	<title>Lista Utenti non abilitati - Questionario</title>
+	<title>Modifica Questionario - Questionario</title>
 </head>
 
 <body>
 
 <div class="container">
 
-	<h3>Lista utenti non abilitati</h3>
+	<h3 th:text="'Questionario ' + ${questionario.titolo}"></h3>
 	<hr>
 	
 	<div>
@@ -28,49 +28,49 @@
 		<br><br>
 	</div>
 	
+	
 	<div sec:authorize="hasRole('ROLE_ADMIN')">
 		<a th:href="@{/registration/showForm}"><button class="btn btn-success mb-3">Crea Utente</button></a>
 		<a th:href="@{/enable/users-list}"><button class="btn btn-success mb-3">Abilitazioni Utente</button></a>
 	</div>
 	
+	<div class="alert alert-warning" role="alert" th:if="${ #lists.isEmpty(questionario.domande)}">
+	Non sono presenti domande.
+	</div>
 	
-	<table class="table table-bordered" th:if="${not #lists.isEmpty(usersNotEnabled) }">
+<form th:action="@{/survey/edit/confirm}" 
+				th:object="${questionario}" method="POST">
+ <table class="table table-bordered" th:if="${not #lists.isEmpty(questionario.domande)}">
 		<thead class="table-light">
 			<tr>
-				<th>Username</th>
-				<th>Nome</th>
-				<th>Cognome</th>
-				<th>Email</th>
-				<th>Età</th>
-				<th>Genere</th>
-				<th>Abilitazione</th>
+				<th class="col-sm-6">Domande</th>
+				<th>Descrizione Risposte</th>
+				<th>Tipologia Risposte</th>
 			</tr>
 		</thead>
 		
 		<tbody>
-			<tr th:each="tempUser : ${usersNotEnabled}">
+		<tr th:each="tempDomanda, domandaStat : *{domande}" >
 			
-				<td th:text="${tempUser.userName}" />	
-				<td th:text="${tempUser.nome}" />	
-				<td th:text="${tempUser.cognome}" />	
-				<td th:text="${tempUser.email}"/>
-				<td th:text="${tempUser.eta}"/>
-				<td th:text="${tempUser.genere}"/>
 				<td>
-					<a th:href="@{/enable/users-list/active(userName=${tempUser.userName})}"
-						   class="btn btn-info btn-sm">
-							Abilita
-						</a>
+				 	<input class="form-control" type="text" th:field="*{domande[__${domandaStat.index}__].domanda}" placeholder=""> 
+				</td>
+				<td>
+				
+	  			 	<div th:each="tempRisposta, rispstaStat : *{domande[__${domandaStat.index}__].risposte}" th:if="${tempRisposta.tipo != 'open'}">
+	  			 		<input class="form-control" type="text" th:field="*{domande[__${domandaStat.index}__].risposte[__${rispstaStat.index}__].desrisposta}" placeholder="">
+	  			 	</div>
+	  			
 				</td>
 				
-				
+				<td>
+					<div th:if="${ not #lists.isEmpty(tempDomanda.risposte)}" th:text="${tempDomanda.risposte[0].tipo}"></div>
+				</td>
+							
 			</tr>
 		</tbody>		
 	</table>
-	
-	<div class="alert alert-warning" role="alert" th:if="${ #lists.isEmpty(usersNotEnabled) }">
-	Non sono presenti utenti da abilitare.
-	</div>
+</form>
 	
 	<!-- Add a logout button -->
 	<form action="#" th:action="@{/logout}" 
@@ -80,6 +80,8 @@
 		<a th:href="@{/}" class="btn btn-outline-primary mt-2">Home</a>
 	
 	</form>
+
+	
 	
 </div>
 	

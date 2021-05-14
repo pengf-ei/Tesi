@@ -105,7 +105,7 @@ public class Questionario {
 		return "Questionario [id_questionario=" + id_questionario + ", titolo=" + titolo + ", id_sessione="
 				+ id_sessione + ", domande=" + domande + ", risposte=" + risposte + "]";
 	}
-	
 
+	
 	
 }

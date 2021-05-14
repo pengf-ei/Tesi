@@ -34,6 +34,27 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	}
 
 	@Override
+	public Sessione findByNomesessione(String nomesessione) {
+		return sessioneRepository.findByNomesessione(nomesessione);
+	}
+
+	@Override
+	public Sessione findSessioneById(int sessionId) {
+		Optional<Sessione> sessione = sessioneRepository.findById(sessionId);
+		
+		Sessione theSessione = null;
+		
+		if (sessione.isPresent()) {
+			theSessione = sessione.get();
+		}
+		else {
+			theSessione = null;
+		}
+		
+		return theSessione;
+	}
+
+	@Override
 	public Questionario findQuestionarioById(int id) {
 		Optional<Questionario> questionario = questionarioRepository.findById(id);
 		
@@ -48,5 +69,13 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 		
 		return theQuestionario;
 	}
+
+	@Override
+	public Questionario saveQuestionario(Questionario theQuestionario) {
+		return questionarioRepository.saveAndFlush(theQuestionario);
+		
+	}
+
+	
 
 }

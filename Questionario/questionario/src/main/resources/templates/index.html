@@ -22,9 +22,9 @@
 	<hr>
 	
 	<div>
-		User: <span sec:authentication="name"></span>
+		Utente: <span sec:authentication="name"></span>
 		<br>
-		Role(s): <span sec:authentication="principal.authorities"></span>
+		Ruolo(i): <span sec:authentication="principal.authorities"></span>
 		<br><br>
 	</div>
 	
@@ -33,32 +33,118 @@
 		<a th:href="@{/enable/users-list}"><button class="btn btn-success mb-3">Abilitazioni Utente</button></a>
 	</div>
 	
-	
-<!-- <table class="table table-bordered table-striped">
-		<thead class="thead-dark">
-			<tr>
-				<th>Id</th>
-				<th>Inizio</th>
-				<th>Fine</th>
-				<th>Nome Sessione</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<tr th:each="tempSessione : ${sessioni}">
-			
-				<td th:text="${tempSessione.id}" />	
-				<td th:text="${tempSessione.inizio}" />	
-				<td th:text="${tempSessione.fine}" />	
-				<td th:text="${tempSessione.nomesessione}"/>
-				
-				
-			</tr>
-		</tbody>		
-	</table> -->
 
 	<div class="table-responsive" th:if="${ #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-		<table class="table table-bordered caption-top" th:each="tempSessione : ${sessioni}" >
+		<table class="table table-bordered caption-top" th:each="tempSessione : ${sessioni}" th:if="${tempSessione.nomesessione != 'Eliminati'}">
+			<caption th:text="'Accessibile dal ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')} + ' al ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}">
+			</caption>
+			<thead class="table-light">
+				<tr  th:if="${ not #lists.isEmpty(tempSessione.questionari)}")>
+					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
+					<th></th>
+					<th class="col-sm-3">Operazioni</th>
+				</tr>
+				<tr  th:if="${ #lists.isEmpty(tempSessione.questionari)}")>
+					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
+					<th>Non sono presenti i relativi questionari.</th>
+					<th class="col-sm-3"></th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				
+				<tr th:each="tempQuestionario : ${tempSessione.questionari}">
+				
+					<td th:text="${tempQuestionario.id_questionario}" />	
+					<td> <a th:href="@{/surveys/show(surveyId=${tempQuestionario.id_questionario})}" th:text="${tempQuestionario.titolo}" /></a></td>	
+					<td>
+						<a th:href="@{/surveys/show(surveyId=${tempQuestionario.id_questionario})}"
+							   class="btn btn-outline-primary btn-sm">
+								Visualizza
+							</a>
+			
+			
+						<a th:href="@{/surveys/edit(surveyId=${tempQuestionario.id_questionario})}"
+							   class="btn btn-outline-success btn-sm">
+								Modifica
+							</a>
+							
+						<button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSurvey' + ${tempQuestionario.id_questionario}">
+						  Elimina
+						</button>
+
+
+						<div class="modal fade" th:id="'deleteSurvey' + ${tempQuestionario.id_questionario}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Vuoi eliminare</h5>
+						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						      </div>
+						      <div class="modal-body" th:text="${tempQuestionario.titolo} + '?'">
+						        ...
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+						        <a th:href="@{/surveys/delete(surveyId=${tempQuestionario.id_questionario})}"><button type="button" class="btn btn-primary">Conferma</button></a>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+							
+					</td>
+				</tr>
+			</tbody>		
+		</table>
+		
+		<table class="table table-bordered caption-top" th:each="tempSessione : ${sessioni}" th:if="${tempSessione.nomesessione == 'Eliminati'}">
+			<caption>Cestino Questionari
+			</caption>
+			<thead class="table-light">
+				<tr th:if="${ not #lists.isEmpty(tempSessione.questionari)}")>
+
+					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
+					<th></th>
+					<th class="col-sm-3"></th>
+					
+				</tr>
+				
+				<tr th:if="${ #lists.isEmpty(tempSessione.questionari)}")>
+
+					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
+					<th>Non sono presenti questionari eliminati.</th>
+					<th class="col-sm-3"></th>
+					
+				</tr>
+				
+			</thead>
+			
+			<tbody>
+				<tr th:each="tempQuestionario : ${tempSessione.questionari}">
+				
+					<td th:text="${tempQuestionario.id_questionario}" />	
+					<td th:text="${tempQuestionario.titolo}" />	
+					<td>
+					
+						<div class="dropdown">
+						  <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+						    Ripristina a...
+						  </button>
+						  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" >
+						    <li th:each="tempSessione : ${sessioni}" th:if="${tempSessione.nomesessione != 'Eliminati'}"><a class="dropdown-item" th:href="@{/surveys/restore(surveyId=${tempQuestionario.id_questionario},sessionId=${tempSessione.id})}" th:text="${tempSessione.nomesessione}">Action</a></li>
+						  </ul>
+						</div>
+							
+					</td>
+				</tr>
+			</tbody>		
+		</table>
+		
+	</div>
+
+
+	<div class="table-responsive" th:if="${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+		<table class="table table-bordered caption-top" th:each="tempSessione : ${sessioni}" th:if="${tempSessione.inizio.before(#dates.#dates.createNow()) && tempSessione.fine.after(#dates.#dates.createNow())}">
 			<caption th:text="'Accessibile dal ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')} + ' al ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}">
 			</caption>
 			<thead class="table-light">
@@ -67,42 +153,6 @@
 					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
 					<th></th>
 					<th class="col-sm-3">Operazioni</th>
-				</tr>
-			</thead>
-			
-			<tbody>
-			
-		<!-- 	<tr>
-					<th th:text="'Inizio: ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')}" />
-					<th th:text="'Fine: ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}" />
-				</tr> -->
-				
-				<tr th:each="tempQuestionario : ${tempSessione.questionari}">
-				
-					<td th:text="${tempQuestionario.id_questionario}" />	
-					<td th:text="${tempQuestionario.titolo}" />	
-					<td>
-						<a th:href="@{/surveys/show(surveyId=${tempQuestionario.id_questionario})}"
-							   class="btn btn-info btn-sm">
-								Visualizza
-							</a>
-					</td>
-				</tr>
-			</tbody>		
-		</table>
-	</div>
-
-
-	<div class="table-responsive" th:if="${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-		<table class="table table-bordered caption-top" th:each="tempSessione : ${sessioni}" th:if="${tempSessione.inizio.before(#dates.#dates.createNow())}">
-			<caption th:text="'Accessibile dal ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')} + ' al ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}">
-			</caption>
-			<thead class="table-light">
-				<tr>
-	<!-- 				<th th:text="'Id - ' + ${tempSessione.id}" /> -->
-					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
-					<th></th>
-					<th class="col-sm-3"></th>
 				</tr>
 			</thead>
 			
@@ -138,7 +188,9 @@
 	</form>
 	
 </div>
-	
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+
 </body>
 </html>
 

@@ -9,6 +9,13 @@ public interface QuestionarioService {
 
 	public List<Sessione> findSessioni();
 	
+	public Sessione findByNomesessione(String nomesessione);
+	
+	public Sessione findSessioneById(int sessionId);
+	
 	public Questionario findQuestionarioById(int id);
+	
+	public Questionario saveQuestionario(Questionario theQuestionario);
+
 	
 }

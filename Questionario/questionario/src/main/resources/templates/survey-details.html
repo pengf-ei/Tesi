@@ -22,9 +22,9 @@
 	<hr>
 	
 	<div>
-		User: <span sec:authentication="name"></span>
+		Utente: <span sec:authentication="name"></span>
 		<br>
-		Role(s): <span sec:authentication="principal.authorities"></span>
+		Ruolo(i): <span sec:authentication="principal.authorities"></span>
 		<br><br>
 	</div>
 	
@@ -34,9 +34,12 @@
 		<a th:href="@{/enable/users-list}"><button class="btn btn-success mb-3">Abilitazioni Utente</button></a>
 	</div>
 	
+	<div class="alert alert-warning" role="alert" th:if="${ #lists.isEmpty(questionario.domande)}">
+	Non sono presenti domande.
+	</div>
 	
 	
- <table class="table table-bordered">
+ <table class="table table-bordered" th:if="${not #lists.isEmpty(questionario.domande)}">
 		<thead class="table-light">
 			<tr>
 				<th class="col-sm-6">Domande</th>
