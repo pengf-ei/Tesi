@@ -9,6 +9,8 @@ public interface UserService {
 
 	public User findByUserName(String userName);
 	
+	public User findByEmail(String email);
+	
 	public void save(FormUser theFormUser);
 	
 	public List<User> findNotEnabled();

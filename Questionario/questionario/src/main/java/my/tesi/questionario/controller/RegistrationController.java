@@ -62,6 +62,18 @@ public class RegistrationController {
 			 return "registration-bootstrap";
 		 }
 		 
+		 User theUserEmail = userService.findByEmail(formUser.getEmail());
+		 
+		 System.out.println(theUserEmail);
+		 
+		 if (theUserEmail != null) {
+			 
+			 theModel.addAttribute("formUser", new FormUser());
+			 theModel.addAttribute("registrationError", "Email già esistente.");
+			 
+			 return "registration-bootstrap";
+		 }
+		 
 		 userService.save(formUser);
 		
 		 // se utente registrato da admin reindirizzo ad un altra pagina

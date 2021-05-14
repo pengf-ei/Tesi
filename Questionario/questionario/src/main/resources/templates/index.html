@@ -31,6 +31,7 @@
 	<div sec:authorize="hasRole('ROLE_ADMIN')">
 		<a th:href="@{/registration/showForm}"><button class="btn btn-success mb-3">Crea Utente</button></a>
 		<a th:href="@{/enable/users-list}"><button class="btn btn-success mb-3">Abilitazioni Utente</button></a>
+		<a th:href="@{/surveys/create/session}"><button class="btn btn-outline-primary mb-3">Aggiungi Sessione</button></a>
 	</div>
 	
 
@@ -47,7 +48,30 @@
 				<tr  th:if="${ #lists.isEmpty(tempSessione.questionari)}")>
 					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
 					<th>Non sono presenti i relativi questionari.</th>
-					<th class="col-sm-3"></th>
+					<th class="col-sm-3">
+						<button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSession' + ${tempSessione.id}">
+						  Elimina
+						</button>
+						
+						<div class="modal fade" th:id="'deleteSession' + ${tempSessione.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Vuoi eliminare definitivamente</h5>
+						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						      </div>
+						      <div class="modal-body" th:text="${tempSessione.nomesessione} + '?'">
+						        ...
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+						        <a th:href="@{/surveys/deleteSession(Id=${tempSessione.id})}"><button type="button" class="btn btn-primary">Conferma</button></a>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+
+					</th>
 				</tr>
 			</thead>
 			
@@ -56,15 +80,15 @@
 				<tr th:each="tempQuestionario : ${tempSessione.questionari}">
 				
 					<td th:text="${tempQuestionario.id_questionario}" />	
-					<td> <a th:href="@{/surveys/show(surveyId=${tempQuestionario.id_questionario})}" th:text="${tempQuestionario.titolo}" /></a></td>	
+					<td> <a th:href="@{/surveys/showSurvey(Id=${tempQuestionario.id_questionario})}" th:text="${tempQuestionario.titolo}" /></a></td>	
 					<td>
-						<a th:href="@{/surveys/show(surveyId=${tempQuestionario.id_questionario})}"
+						<a th:href="@{/surveys/showSurvey(Id=${tempQuestionario.id_questionario})}"
 							   class="btn btn-outline-primary btn-sm">
 								Visualizza
 							</a>
 			
-			
-						<a th:href="@{/surveys/edit(surveyId=${tempQuestionario.id_questionario})}"
+			 
+						<a th:href="@{/surveys/editSurvey(Id=${tempQuestionario.id_questionario})}"
 							   class="btn btn-outline-success btn-sm">
 								Modifica
 							</a>
@@ -86,7 +110,7 @@
 						      </div>
 						      <div class="modal-footer">
 						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-						        <a th:href="@{/surveys/delete(surveyId=${tempQuestionario.id_questionario})}"><button type="button" class="btn btn-primary">Conferma</button></a>
+						        <a th:href="@{/surveys/deleteSurvey(Id=${tempQuestionario.id_questionario})}"><button type="button" class="btn btn-primary">Conferma</button></a>
 						      </div>
 						    </div>
 						  </div>

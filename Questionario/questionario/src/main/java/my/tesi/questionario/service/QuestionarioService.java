@@ -13,9 +13,16 @@ public interface QuestionarioService {
 	
 	public Sessione findSessioneById(int sessionId);
 	
+	public Sessione saveSessione(Sessione theSessione);
+	
+	public void deleteSessione(Sessione theSessione);
+	
+	
+	
 	public Questionario findQuestionarioById(int id);
 	
 	public Questionario saveQuestionario(Questionario theQuestionario);
+	
 
 	
 }

@@ -55,6 +55,19 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	}
 
 	@Override
+	public Sessione saveSessione(Sessione theSessione) {
+		return sessioneRepository.saveAndFlush(theSessione);
+	}
+	
+	
+
+	@Override
+	public void deleteSessione(Sessione theSessione) {
+		sessioneRepository.delete(theSessione);
+		
+	}
+
+	@Override
 	public Questionario findQuestionarioById(int id) {
 		Optional<Questionario> questionario = questionarioRepository.findById(id);
 		
