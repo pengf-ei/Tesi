@@ -37,23 +37,42 @@
 
 	<div class="table-responsive" th:if="${ #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
 		<table class="table table-bordered caption-top" th:each="tempSessione : ${sessioni}" th:if="${tempSessione.nomesessione != 'Eliminati'}">
-			<caption th:text="'Accessibile dal ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')} + ' al ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}">
+			<caption th:if="${tempSessione.fine.after(#dates.createNow())}" th:text="'Accessibile dal ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')} + ' al ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}">
+			</caption>
+			<caption th:if="${tempSessione.fine.before(#dates.createNow())}" th:text="'Sessione eliminata'">
 			</caption>
 			<thead class="table-light">
 				<tr  th:if="${ not #lists.isEmpty(tempSessione.questionari)}")>
-					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
+					<th class="col-sm-2">
+						<div class="dropdown">
+	  						<button th:text="${tempSessione.nomesessione}" class="btn btn-sm btn-outline-link dropdown-toggle" type="button" th:id="'session_'+${tempSessione.nomesessione}" data-bs-toggle="dropdown" aria-expanded="false"></button>
+							  <ul class="dropdown-menu" th:aria-labelledby="'session_'+${tempSessione.nomesessione}">
+							    <li><a class="dropdown-item" th:href="@{/surveys/editSession(Id=${tempSessione.id})}">Modifica sessione</a></li>
+							    <li><a class="dropdown-item" th:href="@{/surveys/create/survey(sessionId=${tempSessione.id})}">Aggiungi questionario</a></li>
+							    
+							  </ul>
+						</div>
+					</th>
 					<th></th>
 					<th class="col-sm-3">Operazioni</th>
 				</tr>
 				<tr  th:if="${ #lists.isEmpty(tempSessione.questionari)}")>
-					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
+					<th class="col-sm-2">
+						<div class="dropdown">
+	  						<button th:text="${tempSessione.nomesessione}" class="btn btn-sm btn-outline-link dropdown-toggle" type="button" th:id="'session_'+${tempSessione.nomesessione}" data-bs-toggle="dropdown" aria-expanded="false"></button>
+							  <ul class="dropdown-menu" th:aria-labelledby="'session_'+${tempSessione.nomesessione}">
+							    <li><a class="dropdown-item" th:href="@{/surveys/editSession(Id=${tempSessione.id})}">Modifica</a></li>
+							    <li><a class="dropdown-item" th:href="@{/surveys/create/survey(sessionId=${tempSessione.id})}">Aggiungi questionario</a></li>
+							  </ul>
+						</div>
+					</th>
 					<th>Non sono presenti i relativi questionari.</th>
 					<th class="col-sm-3">
-						<button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSession' + ${tempSessione.id}">
+						<button th:if="${tempSessione.fine.after(#dates.createNow())}" type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSession' + ${tempSessione.id}">
 						  Elimina
 						</button>
 						
-						<div class="modal fade" th:id="'deleteSession' + ${tempSessione.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div th:if="${tempSessione.fine.after(#dates.createNow())}" class="modal fade" th:id="'deleteSession' + ${tempSessione.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 						  <div class="modal-dialog">
 						    <div class="modal-content">
 						      <div class="modal-header">
@@ -115,7 +134,8 @@
 						    </div>
 						  </div>
 						</div>
-							
+						
+									
 					</td>
 				</tr>
 			</tbody>		

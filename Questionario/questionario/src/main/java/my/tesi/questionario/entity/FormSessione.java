@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class FormSessione {
 	
-//	private int id;
+	private int id;
 	
 	@NotNull(message = "- campo richiesto")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -35,15 +35,6 @@ public class FormSessione {
 	public FormSessione() {
 		
 	}
-
-	
-	public FormSessione(@NotNull Date inizio, @NotNull Date fine,
-		@NotNull @Size(min = 1, message = "lunghezza invalida") String nomesessione) {
-	this.inizio = inizio;
-	this.fine = fine;
-	this.nomesessione = nomesessione;
-}
-
 
 
 	public Date getInizio() {
@@ -69,7 +60,24 @@ public class FormSessione {
 	public void setNomesessione(String nomesessione) {
 		this.nomesessione = nomesessione;
 	}
-	
-	
 
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	@Override
+	public String toString() {
+		return "FormSessione [id=" + id + ", inizio=" + inizio + ", fine=" + fine + ", nomesessione=" + nomesessione
+				+ "]";
+	}
+
+
+	
 }

@@ -1,6 +1,5 @@
 package my.tesi.questionario.controller;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import my.tesi.questionario.entity.FormQuestionario;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
 import my.tesi.questionario.entity.Sessione;
@@ -47,7 +47,7 @@ public class QuestionarioController {
 		List<Sessione> sessioni = new ArrayList<>();
 		
 		sessioni = questionarioService.findSessioni();
-		
+
 		theModel.addAttribute("sessioni", sessioni);
 
 		
@@ -114,6 +114,40 @@ public class QuestionarioController {
 		return "survey-details-edit";
 	}
 	
+	// CREAZIONE QUESTIONARIO
+	@GetMapping("/surveys/create/survey")
+	public String createNewSurvey(@RequestParam("sessionId") int sessionId, Model theModel) {
+		
+		FormQuestionario theFormQuestionario = new FormQuestionario();
+		
+		theFormQuestionario.setId_sessione(sessionId);
+		
+		theModel.addAttribute("questionario", theFormQuestionario);
+				
+		return "survey-create-survey";
+	}
+	
+	@PostMapping("/surveys/create/survey/process")
+	public String processNewSurvey(@Valid @ModelAttribute("questionario") FormQuestionario formQuestionario,
+			BindingResult theBindingResult, Model theModel) {
+
+
+			if (theBindingResult.hasErrors()) {
+			
+				return "survey-create-survey";
+			
+			}
+						
+			Questionario theQuestionario = new Questionario();
+			theQuestionario.setId_questionario(formQuestionario.getId_questionario());
+			theQuestionario.setTitolo(formQuestionario.getTitolo());
+			theQuestionario.setId_sessione(questionarioService.findSessioneById(formQuestionario.getId_sessione()));
+			
+			questionarioService.saveQuestionario(theQuestionario);
+			
+			return "redirect:/";
+		}
+	
 	// CREAZIONE SESSIONE
 	
 	@GetMapping("/surveys/create/session")
@@ -142,11 +176,11 @@ public class QuestionarioController {
 		
 		Sessione theSessione = new Sessione();
 		
+		theSessione.setId(formSessione.getId());
 		theSessione.setNomesessione(formSessione.getNomesessione());
 		theSessione.setInizio(formSessione.getInizio());
-		theSessione.setFine(formSessione.getInizio());
+		theSessione.setFine(formSessione.getFine());
 		
-		System.out.print(theSessione);
 		
 		questionarioService.saveSessione(theSessione);
 		
@@ -157,13 +191,29 @@ public class QuestionarioController {
 	public String deleteSession(@RequestParam("Id") int sessionId) {
 		
 		Sessione theSessione  = questionarioService.findSessioneById(sessionId);
-		
 			
 		if ( theSessione != null ) {
 			questionarioService.deleteSessione(theSessione);
 		}
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("/surveys/editSession")
+	public String editSession(@RequestParam("Id") int sessionId, Model theModel) {
+		
+		Sessione theSessioneInit  = questionarioService.findSessioneById(sessionId);
+		
+		FormSessione theFormSessione = new FormSessione();
+		
+		theFormSessione.setId(theSessioneInit.getId());
+		theFormSessione.setInizio(theSessioneInit.getInizio());
+		theFormSessione.setFine(theSessioneInit.getFine());
+		theFormSessione.setNomesessione(theSessioneInit.getNomesessione());
+		
+		theModel.addAttribute("sessione", theFormSessione);
+		
+		return "survey-create-session";
 	}
 	
 }

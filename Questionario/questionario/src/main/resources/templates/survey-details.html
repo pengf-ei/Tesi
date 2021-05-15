@@ -58,12 +58,12 @@
 						<label class="form-check-label" th:for="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}" th:text="${tempRispostaStat.index + 1} + '. ' + ${tempRisposta.desrisposta}" ></label>
 					</div>
 					
-					<div th:if="${not #lists.isEmpty(tempDomanda.risposte)}">
+				 <div th:if="${not #lists.isEmpty(tempDomanda.risposte)}">
 		 				<select class="form-select" aria-label="Default select example" th:if="${tempDomanda.risposte[0].tipo == 'list'}">
 							<option value="">Scegliere...</option>
 							<option th:each="tempRisposta : ${tempDomanda.risposte}" th:value="${tempRisposta.id_risposta}" th:text="${tempRispostaStat.index + 1} + '. ' + ${tempRisposta.desrisposta}"></option>
 						</select>
-					</div>
+				</div>
 					
 					<div class="form-check" th:each="tempRisposta : ${tempDomanda.risposte}" th:if="${tempRisposta.tipo == 'multi'}">
 						<input class="form-check-input" type="checkbox" th:value="${tempRisposta.id_risposta}" th:id="'answer' + ${tempDomanda.id_domanda} + '_' + ${tempRisposta.id_risposta}">
