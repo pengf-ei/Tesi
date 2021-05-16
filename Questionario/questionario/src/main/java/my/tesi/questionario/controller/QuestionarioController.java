@@ -107,11 +107,18 @@ public class QuestionarioController {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
 		
-		theModel.addAttribute("questionario", theQuestionario);
+		FormQuestionario theFormQuestionario = new FormQuestionario();
+		
+		theFormQuestionario.setId_questionario(theQuestionario.getId_questionario());
+		theFormQuestionario.setId_sessione(theQuestionario.getId_sessione().getId());
+		theFormQuestionario.setTitolo(theQuestionario.getTitolo());
+				
+		theModel.addAttribute("questionario", theFormQuestionario);
+		theModel.addAttribute("modifica", "true");
 		
 //		Questionario theSaved = questionarioService.saveQuestionario(theQuestionario);
 		
-		return "survey-details-edit";
+		return "survey-create-survey"; //"survey-details-edit";
 	}
 	
 	// CREAZIONE QUESTIONARIO
@@ -123,6 +130,8 @@ public class QuestionarioController {
 		theFormQuestionario.setId_sessione(sessionId);
 		
 		theModel.addAttribute("questionario", theFormQuestionario);
+		
+		theModel.addAttribute("creazione", "true");
 				
 		return "survey-create-survey";
 	}
@@ -154,6 +163,8 @@ public class QuestionarioController {
 	public String createNewSession(Model theModel) {
 		
 		theModel.addAttribute("sessione", new FormSessione());
+		
+		theModel.addAttribute("creazione", "true");
 				
 		return "survey-create-session";
 	}
@@ -212,6 +223,8 @@ public class QuestionarioController {
 		theFormSessione.setNomesessione(theSessioneInit.getNomesessione());
 		
 		theModel.addAttribute("sessione", theFormSessione);
+		
+		theModel.addAttribute("modifica", "true");
 		
 		return "survey-create-session";
 	}

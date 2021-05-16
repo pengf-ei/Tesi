@@ -9,7 +9,8 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.82.0">
     
-    <title>Creazione sessione - Questionario</title>
+    <title th:if="${creazione}">Creazione sessione - Questionario</title>
+    <title th:if="${modifica}">Modifica sessione - Questionario</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/checkout/">
 
@@ -60,7 +61,8 @@
   <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
 </svg>
 
-      <h2>Creazione nuova sessione</h2>
+      <h2 th:if="${creazione}">Creazione nuova sessione</h2>
+      <h2 th:if="${modifica}">Modifica Sessione</h2>
       <p class="lead">Inserire tutte le informazione neccessarie per la sessione.</p>
     </div>
 
