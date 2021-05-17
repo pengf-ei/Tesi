@@ -3,6 +3,7 @@ package my.tesi.questionario.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import my.tesi.questionario.entity.Domanda;
+import my.tesi.questionario.entity.FormDomanda;
 import my.tesi.questionario.entity.FormQuestionario;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
@@ -56,7 +59,7 @@ public class QuestionarioController {
 	
 	// VISUALIZZA QUESTIONARIO
 	
-	@GetMapping("/surveys/showSurvey")
+	@GetMapping("/surveys/show/survey")
 	public String showSurvey(@RequestParam("Id") int surveyId, Model theModel) {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
@@ -68,7 +71,7 @@ public class QuestionarioController {
 	
 	// ELIMINAZIONE LOGICA QUESTIONARIO
 	
-	@GetMapping("/surveys/deleteSurvey")
+	@GetMapping("/surveys/delete/survey")
 	public String deleteSurvey(@RequestParam("Id") int surveyId) {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
@@ -80,6 +83,7 @@ public class QuestionarioController {
 		
 		Questionario theSaved = questionarioService.saveQuestionario(theQuestionario);
 		
+//		questionarioService.deleteQuestionario(theQuestionario);
 		
 		return "redirect:/";
 	}
@@ -100,10 +104,10 @@ public class QuestionarioController {
 		return "redirect:/";
 	}
 	
-	// MODIFICA QUESTIONARIO-----IN PROGRESS
+	// MODIFICA QUESTIONARIO
 	
-	@GetMapping("/surveys/editSurvey")
-	public String editSurvey(@RequestParam("Id") int surveyId, Model theModel) {
+	@GetMapping("/surveys/edit/survey")
+	public String editSurvey(@RequestParam("Id") int surveyId, Model theModel, HttpSession session) {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
 		
@@ -114,7 +118,8 @@ public class QuestionarioController {
 		theFormQuestionario.setTitolo(theQuestionario.getTitolo());
 				
 		theModel.addAttribute("questionario", theFormQuestionario);
-		theModel.addAttribute("modifica", "true");
+		
+		session.setAttribute("creazione", "false");
 		
 //		Questionario theSaved = questionarioService.saveQuestionario(theQuestionario);
 		
@@ -123,7 +128,7 @@ public class QuestionarioController {
 	
 	// CREAZIONE QUESTIONARIO
 	@GetMapping("/surveys/create/survey")
-	public String createNewSurvey(@RequestParam("sessionId") int sessionId, Model theModel) {
+	public String createNewSurvey(@RequestParam("sessionId") int sessionId, Model theModel, HttpSession session) {
 		
 		FormQuestionario theFormQuestionario = new FormQuestionario();
 		
@@ -131,7 +136,7 @@ public class QuestionarioController {
 		
 		theModel.addAttribute("questionario", theFormQuestionario);
 		
-		theModel.addAttribute("creazione", "true");
+		session.setAttribute("creazione", "true");
 				
 		return "survey-create-survey";
 	}
@@ -140,7 +145,8 @@ public class QuestionarioController {
 	public String processNewSurvey(@Valid @ModelAttribute("questionario") FormQuestionario formQuestionario,
 			BindingResult theBindingResult, Model theModel) {
 
-
+			System.out.println(theModel.toString());
+		
 			if (theBindingResult.hasErrors()) {
 			
 				return "survey-create-survey";
@@ -160,11 +166,11 @@ public class QuestionarioController {
 	// CREAZIONE SESSIONE
 	
 	@GetMapping("/surveys/create/session")
-	public String createNewSession(Model theModel) {
+	public String createNewSession(Model theModel, HttpSession session) {
 		
 		theModel.addAttribute("sessione", new FormSessione());
 		
-		theModel.addAttribute("creazione", "true");
+		session.setAttribute("creazione", "true");
 				
 		return "survey-create-session";
 	}
@@ -198,7 +204,9 @@ public class QuestionarioController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/surveys/deleteSession")
+	// ELIMINAZIONE FISICA SESSIONE
+	
+	@GetMapping("/surveys/delete/session")
 	public String deleteSession(@RequestParam("Id") int sessionId) {
 		
 		Sessione theSessione  = questionarioService.findSessioneById(sessionId);
@@ -210,8 +218,10 @@ public class QuestionarioController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/surveys/editSession")
-	public String editSession(@RequestParam("Id") int sessionId, Model theModel) {
+	// MODIFICA SESSIONE
+	
+	@GetMapping("/surveys/edit/session")
+	public String editSession(@RequestParam("Id") int sessionId, Model theModel, HttpSession session) {
 		
 		Sessione theSessioneInit  = questionarioService.findSessioneById(sessionId);
 		
@@ -223,10 +233,44 @@ public class QuestionarioController {
 		theFormSessione.setNomesessione(theSessioneInit.getNomesessione());
 		
 		theModel.addAttribute("sessione", theFormSessione);
-		
-		theModel.addAttribute("modifica", "true");
+	
+		session.setAttribute("creazione", "false");
 		
 		return "survey-create-session";
 	}
 	
+	// CREAZIONE DOMANDA
+	@GetMapping("/surveys/create/question")
+	public String createQuestion(@RequestParam("surveyId") int surveyId, Model theModel, HttpSession session) {
+		
+		FormDomanda formDomanda = new FormDomanda();
+		
+		formDomanda.setId_questionario(surveyId);
+		
+		theModel.addAttribute("domanda", formDomanda);
+		
+		session.setAttribute("creazione", "true");
+		
+		return "survey-create-question";
+	}
+	
+	@PostMapping("/surveys/create/question/process")
+	public String processNewQuestion(@Valid @ModelAttribute("domanda") FormDomanda formDomanda,
+			BindingResult theBindingResult, Model theModel) {
+		
+		if (theBindingResult.hasErrors()) {
+			
+			return "survey-create-question";
+		 }
+		
+		Domanda theDomanda = new Domanda();
+		
+		theDomanda.setId_questionario(questionarioService.findQuestionarioById(formDomanda.getId_questionario()));
+		theDomanda.setId_domanda(formDomanda.getId_domanda());
+		theDomanda.setDomanda(formDomanda.getDomanda());
+		
+		questionarioService.saveDomanda(theDomanda);
+		
+		return "redirect:/";
+	}
 }

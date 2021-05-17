@@ -19,4 +19,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 	public void setUserEnabled(@Param("username") String username);
 	
 	public User findByEmail(String email);
+	
 }

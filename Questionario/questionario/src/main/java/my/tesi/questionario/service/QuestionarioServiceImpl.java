@@ -8,8 +8,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import my.tesi.questionario.dao.DomandaRepository;
 import my.tesi.questionario.dao.QuestionarioRepository;
 import my.tesi.questionario.dao.SessioneRepository;
+import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.Questionario;
 import my.tesi.questionario.entity.Sessione;
 
@@ -20,10 +22,15 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	
 	private QuestionarioRepository questionarioRepository;
 	
+	private DomandaRepository domandaRepository;
+	
 	@Autowired
-	public QuestionarioServiceImpl(SessioneRepository theSessioneRepository, QuestionarioRepository theQuestionarioRepository) {
+	public QuestionarioServiceImpl(SessioneRepository theSessioneRepository,
+									QuestionarioRepository theQuestionarioRepository,
+									DomandaRepository theDomandaRepository) {
 		sessioneRepository = theSessioneRepository;
 		questionarioRepository = theQuestionarioRepository;
+		domandaRepository = theDomandaRepository;
 	}
 
 	@Override
@@ -87,6 +94,19 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	public Questionario saveQuestionario(Questionario theQuestionario) {
 		return questionarioRepository.saveAndFlush(theQuestionario);
 		
+	}
+	
+
+	@Override
+	public void deleteQuestionario(Questionario theQuestionario) {
+		questionarioRepository.delete(theQuestionario);
+		
+	}
+
+	@Override
+	public Domanda saveDomanda(Domanda theDomanda) {
+		
+		return domandaRepository.saveAndFlush(theDomanda);
 	}
 
 	

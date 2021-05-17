@@ -1,34 +1,28 @@
 package my.tesi.questionario.entity;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
 public class FormDomanda {
 	
-	@NotNull(message = "- campo richiesto")
-	private FormQuestionario id_questionario;
+	private int id_questionario;
 	
-	@NotNull(message = "- campo richiesto")
 	private int id_domanda;
 
 	@NotNull(message = "- campo richiesto")
 	@Size(min = 1, message = "lunghezza invalida")
 	private String domanda;
 	
-	private List<FormRisposta> risposte;
-	
 	public FormDomanda() {
 		
 	}
 
-	public FormQuestionario getId_questionario() {
+	public int getId_questionario() {
 		return id_questionario;
 	}
 
-	public void setId_questionario(FormQuestionario id_questionario) {
+	public void setId_questionario(int id_questionario) {
 		this.id_questionario = id_questionario;
 	}
 
@@ -48,14 +42,11 @@ public class FormDomanda {
 		this.domanda = domanda;
 	}
 
-	public List<FormRisposta> getRisposte() {
-		return risposte;
+	@Override
+	public String toString() {
+		return "FormDomanda [id_questionario=" + id_questionario + ", id_domanda=" + id_domanda + ", domanda=" + domanda
+				+ "]";
 	}
 
-	public void setRisposte(List<FormRisposta> risposte) {
-		this.risposte = risposte;
-	}
-
-	
 	
 }

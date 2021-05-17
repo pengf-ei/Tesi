@@ -83,9 +83,12 @@ public class Sessione {
 		this.nomesessione = nomesessione;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "Sessione [id=" + id + ", inizio=" + inizio + ", fine=" + fine + ", nomesessione=" + nomesessione + "]";
+		return "Sessione [id=" + id + ", inizio=" + inizio + ", fine=" + fine + ", nomesessione=" + nomesessione
+				+ ", questionari=" + questionari + "]";
 	}
 
 	public List<Questionario> getQuestionari() {

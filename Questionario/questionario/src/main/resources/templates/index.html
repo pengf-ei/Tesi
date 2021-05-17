@@ -47,7 +47,7 @@
 						<div class="dropdown">
 	  						<button th:text="${tempSessione.nomesessione}" class="btn btn-sm btn-outline-link dropdown-toggle" type="button" th:id="'session_'+${tempSessione.nomesessione}" data-bs-toggle="dropdown" aria-expanded="false"></button>
 							  <ul class="dropdown-menu" th:aria-labelledby="'session_'+${tempSessione.nomesessione}">
-							    <li><a class="dropdown-item" th:href="@{/surveys/editSession(Id=${tempSessione.id})}">Modifica sessione</a></li>
+							    <li><a class="dropdown-item" th:href="@{/surveys/edit/session(Id=${tempSessione.id})}">Modifica sessione</a></li>
 							    <li><a class="dropdown-item" th:href="@{/surveys/create/survey(sessionId=${tempSessione.id})}">Aggiungi questionario</a></li>
 							    
 							  </ul>
@@ -61,7 +61,7 @@
 						<div class="dropdown">
 	  						<button th:text="${tempSessione.nomesessione}" class="btn btn-sm btn-outline-link dropdown-toggle" type="button" th:id="'session_'+${tempSessione.nomesessione}" data-bs-toggle="dropdown" aria-expanded="false"></button>
 							  <ul class="dropdown-menu" th:aria-labelledby="'session_'+${tempSessione.nomesessione}">
-							    <li><a class="dropdown-item" th:href="@{/surveys/editSession(Id=${tempSessione.id})}">Modifica</a></li>
+							    <li><a class="dropdown-item" th:href="@{/surveys/edit/session(Id=${tempSessione.id})}">Modifica sessione</a></li>
 							    <li><a class="dropdown-item" th:href="@{/surveys/create/survey(sessionId=${tempSessione.id})}">Aggiungi questionario</a></li>
 							  </ul>
 						</div>
@@ -84,7 +84,7 @@
 						      </div>
 						      <div class="modal-footer">
 						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-						        <a th:href="@{/surveys/deleteSession(Id=${tempSessione.id})}"><button type="button" class="btn btn-primary">Conferma</button></a>
+						        <a th:href="@{/surveys/delete/session(Id=${tempSessione.id})}"><button type="button" class="btn btn-primary">Conferma</button></a>
 						      </div>
 						    </div>
 						  </div>
@@ -99,22 +99,27 @@
 				<tr th:each="tempQuestionario : ${tempSessione.questionari}">
 				
 					<td th:text="${tempQuestionario.id_questionario}" />	
-					<td> <a th:href="@{/surveys/showSurvey(Id=${tempQuestionario.id_questionario})}" th:text="${tempQuestionario.titolo}" /></a></td>	
+					<td> <a th:href="@{/surveys/show/survey(Id=${tempQuestionario.id_questionario})}" th:text="${tempQuestionario.titolo}" /></a></td>	
 					<td>
-						<a th:href="@{/surveys/showSurvey(Id=${tempQuestionario.id_questionario})}"
+							
+							<div class="dropdown">
+							
+							<a th:href="@{/surveys/show/survey(Id=${tempQuestionario.id_questionario})}"
 							   class="btn btn-outline-primary btn-sm">
 								Visualizza
 							</a>
-			
-			 
-						<a th:href="@{/surveys/editSurvey(Id=${tempQuestionario.id_questionario})}"
-							   class="btn btn-outline-success btn-sm">
-								Modifica
-							</a>
 							
-						<button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSurvey' + ${tempQuestionario.id_questionario}">
+	  						<button class="btn btn-sm btn-outline-success dropdown-toggle" type="button" th:id="'session_'+${tempSessione.nomesessione}" data-bs-toggle="dropdown" aria-expanded="false">Modifica</button>
+							  <ul class="dropdown-menu" th:aria-labelledby="'session_'+${tempSessione.nomesessione}">
+							    <li><a class="dropdown-item" th:href="@{/surveys/edit/survey(Id=${tempQuestionario.id_questionario})}">Modifica titolo questionario</a></li>
+							    <li><a class="dropdown-item" th:href="@{/surveys/create/question(surveyId=${tempQuestionario.id_questionario})}">Aggiungi domanda</a></li>
+							  </ul>
+							  
+							  <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSurvey' + ${tempQuestionario.id_questionario}">
 						  Elimina
 						</button>
+						</div>
+							
 
 
 						<div class="modal fade" th:id="'deleteSurvey' + ${tempQuestionario.id_questionario}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -129,7 +134,7 @@
 						      </div>
 						      <div class="modal-footer">
 						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-						        <a th:href="@{/surveys/deleteSurvey(Id=${tempQuestionario.id_questionario})}"><button type="button" class="btn btn-primary">Conferma</button></a>
+						        <a th:href="@{/surveys/delete/survey(Id=${tempQuestionario.id_questionario})}"><button type="button" class="btn btn-primary">Conferma</button></a>
 						      </div>
 						    </div>
 						  </div>

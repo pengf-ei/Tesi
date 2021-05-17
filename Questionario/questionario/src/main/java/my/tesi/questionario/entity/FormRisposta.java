@@ -4,13 +4,11 @@ import javax.validation.constraints.NotNull;
 
 public class FormRisposta {
 	
-	@NotNull(message = "- campo richiesto")
-	private FormQuestionario id_questionario;
+
+	private int id_questionario;
 	
-	@NotNull(message = "- campo richiesto")
-	private FormDomanda id_domanda;
+	private int id_domanda;
 	
-	@NotNull(message = "- campo richiesto")
 	private int id_risposta;
 	
 	@NotNull(message = "- campo richiesto")
@@ -26,19 +24,19 @@ public class FormRisposta {
 		
 	}
 
-	public FormQuestionario getId_questionario() {
+	public int getId_questionario() {
 		return id_questionario;
 	}
 
-	public void setId_questionario(FormQuestionario id_questionario) {
+	public void setId_questionario(int id_questionario) {
 		this.id_questionario = id_questionario;
 	}
 
-	public FormDomanda getId_domanda() {
+	public int getId_domanda() {
 		return id_domanda;
 	}
 
-	public void setId_domanda(FormDomanda id_domanda) {
+	public void setId_domanda(int id_domanda) {
 		this.id_domanda = id_domanda;
 	}
 
@@ -73,6 +71,7 @@ public class FormRisposta {
 	public void setScore(int score) {
 		this.score = score;
 	}
-
+	
+	
 	
 }
