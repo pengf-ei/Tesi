@@ -23,6 +23,7 @@ import my.tesi.questionario.entity.FormDomanda;
 import my.tesi.questionario.entity.FormQuestionario;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
 import my.tesi.questionario.service.QuestionarioService;
 
@@ -37,6 +38,7 @@ public class QuestionarioController {
 		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
 		
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
+		
 	}
 	
 	@Autowired
@@ -143,7 +145,7 @@ public class QuestionarioController {
 	
 	@PostMapping("/surveys/create/survey/process")
 	public String processNewSurvey(@Valid @ModelAttribute("questionario") FormQuestionario formQuestionario,
-			BindingResult theBindingResult, Model theModel) {
+			BindingResult theBindingResult, Model theModel, HttpSession session) {
 
 			System.out.println(theModel.toString());
 		
@@ -158,7 +160,11 @@ public class QuestionarioController {
 			theQuestionario.setTitolo(formQuestionario.getTitolo());
 			theQuestionario.setId_sessione(questionarioService.findSessioneById(formQuestionario.getId_sessione()));
 			
-			questionarioService.saveQuestionario(theQuestionario);
+			theQuestionario = questionarioService.saveQuestionario(theQuestionario);
+			
+			if(session.getAttribute("creazione").equals("true")) {
+				return "redirect:/surveys/create/question?surveyId=" + theQuestionario.getId_questionario();
+			}
 			
 			return "redirect:/";
 		}
@@ -177,7 +183,7 @@ public class QuestionarioController {
 	
 	@PostMapping("/surveys/create/session/process")
 	public String processNewSession(@Valid @ModelAttribute("sessione") FormSessione formSessione,
-									BindingResult theBindingResult, Model theModel) {
+									BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
 		
 		if (theBindingResult.hasErrors()) {
@@ -199,7 +205,11 @@ public class QuestionarioController {
 		theSessione.setFine(formSessione.getFine());
 		
 		
-		questionarioService.saveSessione(theSessione);
+		theSessione = questionarioService.saveSessione(theSessione);
+		
+		if(session.getAttribute("creazione").equals("true")) {
+			return "redirect:/surveys/create/survey?sessionId=" + theSessione.getId();
+		}
 		
 		return "redirect:/";
 	}
@@ -258,7 +268,10 @@ public class QuestionarioController {
 	public String processNewQuestion(@Valid @ModelAttribute("domanda") FormDomanda formDomanda,
 			BindingResult theBindingResult, Model theModel) {
 		
-		if (theBindingResult.hasErrors()) {
+		
+		if (theBindingResult.hasErrors() || ( (! formDomanda.getTipo().equals("open")) && (formDomanda.getNum() < 2) ) )  {
+			
+			theModel.addAttribute("numrisposteerr", "");
 			
 			return "survey-create-question";
 		 }
@@ -269,8 +282,38 @@ public class QuestionarioController {
 		theDomanda.setId_domanda(formDomanda.getId_domanda());
 		theDomanda.setDomanda(formDomanda.getDomanda());
 		
+//		System.out.println(theDomanda.getId_questionario().getTitolo());
+//		System.out.println(theDomanda.getId_domanda());
+//		System.out.println(theDomanda.getRisposte());
+		
+		List<Risposta> risposte = new ArrayList<>();
+		
+		for (int i = 0; i < formDomanda.getNum(); i++) {
+			
+			Risposta tempRisposta = new Risposta();
+					
+			tempRisposta.setId_questionario(theDomanda.getId_questionario());
+			tempRisposta.setId_domanda(theDomanda);
+			tempRisposta.setId_risposta(0);
+			
+			if(formDomanda.getRisposte() == null) {
+				tempRisposta.setDesrisposta(null);
+			}
+			else {
+				tempRisposta.setDesrisposta(formDomanda.getRisposte().get(i));
+			}
+			
+			tempRisposta.setTipo(formDomanda.getTipo());
+			tempRisposta.setScore(formDomanda.getScores().get(i));
+			
+			risposte.add(tempRisposta);
+		}
+
+		
+		theDomanda.setRisposte(risposte);
+		
 		questionarioService.saveDomanda(theDomanda);
 		
-		return "redirect:/";
+		return "redirect:/surveys/show/survey?Id=" + theDomanda.getId_questionario().getId_questionario();
 	}
 }

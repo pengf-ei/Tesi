@@ -50,6 +50,121 @@
     
   </head>
   <body class="bg-light">
+  
+  <script type="text/javascript">
+  
+  		function nascondiNumRisp() {
+			  var x = document.getElementById("tipo").value;
+			  var y =document.getElementById("NumRisp");
+			  var z =document.getElementById("ScoreRispOpen");
+			  
+			  if(x == "open"){
+				  document.getElementById("num").value=1;
+				  BuildFormFields(0);
+				  BuildScoreOpen(1);
+				  y.style.display = "none";
+				  z.style.display = "block";
+			  }
+			  else {
+				  y.style.display = "block";
+				  z.style.display = "none";
+				  BuildScoreOpen(0);
+			  }
+  		}
+  		
+  		function BuildScoreOpen($amount)
+  		{
+  			var $container = document.getElementById('ScoreRispOpen'),
+				$item, $field, $i;
+  			
+  			$container.innerHTML='';
+  			
+  			for($i = 0; $i < $amount; $i++)
+  				$item = document.createElement('div');
+			//	$item.classList.add('col-sm-3');
+				
+				$field = document.createElement('label');
+				$field.innerHTML = 'Punteggio';
+				$field.classList.add('form-label')
+				$field.htmlFor = 'scores[0]';
+				$item.appendChild($field);
+				
+				$field = document.createElement('div');
+				$field.classList.add('input-group');
+				$field.classList.add('has-validation');
+				$item.appendChild($field);
+				
+				$field = document.createElement('input');
+				$field.classList.add('form-control');
+				$field.id = 'scores[0]';
+				$field.name = 'scores[0]';
+				$field.type = 'text';
+				$field.required = true;
+				$item.appendChild($field);
+				
+				$container.appendChild($item);
+  			
+  		}
+
+		function BuildFormFields($amount)
+		{
+			var
+				$container = document.getElementById('FormFields'),
+				$item, $field, $i;
+
+			$container.innerHTML = '';
+			for ($i = 0; $i < $amount; $i++) {
+				$item = document.createElement('div');
+				$item.classList.add('col-sm-9');
+
+				$field = document.createElement('label');
+				$field.innerHTML = 'Risposta ' + ($i+1);
+				$field.classList.add('form-label')
+				$field.htmlFor = 'risposte[' + $i + ']';
+				$item.appendChild($field);
+
+				$field = document.createElement('div');
+				$field.classList.add('input-group');
+				$field.classList.add('has-validation');
+				$item.appendChild($field);
+				
+				$field = document.createElement('input');
+				$field.classList.add('form-control');
+				$field.id = 'risposte[' + $i + ']';
+				$field.name = 'risposte[' + $i + ']';
+				$field.type = 'text';
+				$field.required = true;
+				$item.appendChild($field);
+
+				$container.appendChild($item);
+				
+				$item = document.createElement('div');
+				$item.classList.add('col-sm-3');
+				
+				$field = document.createElement('label');
+				$field.innerHTML = 'Punteggio';
+				$field.classList.add('form-label')
+				$field.htmlFor = 'scores[' + $i + ']';
+				$item.appendChild($field);
+				
+				$field = document.createElement('div');
+				$field.classList.add('input-group');
+				$field.classList.add('has-validation');
+				$item.appendChild($field);
+				
+				$field = document.createElement('input');
+				$field.classList.add('form-control');
+				$field.id = 'scores[' + $i + ']';
+				$field.name = 'scores[' + $i + ']';
+				$field.type = 'text';
+				$field.required = true;
+				$item.appendChild($field);
+				
+				$container.appendChild($item);
+			}
+		}
+
+	</script>
     
 <div class="container">
   <main>
@@ -90,12 +205,36 @@
         
               </div>
             </div>
-
+            
+          
+            
+            <div class="col-sm-6">
+              <label for="tipo" class="form-label">Tipo di risposta</label>
+              <select class="form-select" th:field="*{tipo}" onchange="nascondiNumRisp()">
+                <option value="">Scegliere...</option>
+                <option value="radio">Scelta singola</option>
+                <option value="multi">Scelta multipla</option>
+                <option value="open">Risposta aperta</option>
+                <option value="list">Menù tendina</option>
+              </select>
+              <div th:if="${#fields.hasErrors('tipo')}" class="invalid-feedback" style="display:block;" th:each="err : ${#fields.errors('tipo')}" th:text="'Tipologia ' + ${err}" />
+            </div>
+            
+            <div class="col-sm-6" id="NumRisp">
+              <label for="tipo" class="form-label">Numero risposte</label>
+              <input class="form-control" type="text" th:field="*{num}" placeholder="" onkeyup="BuildFormFields(parseInt(this.value, 10));">
+               <div th:if="${numrisposteerr}" class="invalid-feedback" style="display:block;" th:text="'Numeri risposte invalide'" ></div>
+             </div>
+            
+            <div class="col-sm-6" id="ScoreRispOpen" style="display:none;">
+            </div>
+   
             
           </div>
 
-
-
+		<div class="row g-3">
+		<div id="FormFields" class="row g-3"></div>
+		</div>
 <!-- 	<div sec:authorize="hasRole('ROLE_ADMIN')">
 			<input type="hidden" id="enabled" name="enabled" th:value="1">
 		</div> 

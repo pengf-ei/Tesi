@@ -41,11 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/resources/**").permitAll()
 			.antMatchers("/").hasRole("UTENTE")
 			.antMatchers("/enable/**").hasRole("ADMIN")
+			.antMatchers("/surveys/create/**").hasRole("ADMIN")
+			.antMatchers("/surveys/edit/**").hasRole("ADMIN")
+			.antMatchers("/surveys/delete/**").hasRole("ADMIN")
 			.and()
 			.formLogin()
 				.loginPage("/login")
 				.loginProcessingUrl("/authenticate")
 			.permitAll()
+			.and()
+			.exceptionHandling().accessDeniedPage("/access-denied.html")
 			.and()
 			.logout().permitAll();
 		
