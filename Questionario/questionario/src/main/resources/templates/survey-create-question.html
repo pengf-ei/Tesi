@@ -198,7 +198,7 @@
 			<input class="form-control" type="hidden" th:field="*{id_domanda}" placeholder="">
 			
             <div class="col-12">
-              <label for="titolo" class="form-label">Titolo Domanda</label>
+              <label for="domanda" class="form-label">Titolo Domanda</label>
               <div class="input-group has-validation">
                 <input class="form-control" type="text" th:field="*{domanda}" placeholder="">
 				<div th:if="${#fields.hasErrors('domanda')}" class="invalid-feedback" style="display:block;" th:each="err : ${#fields.errors('domanda')}" th:text="'Domanda ' + ${err}" />
@@ -221,7 +221,7 @@
             </div>
             
             <div class="col-sm-6" id="NumRisp">
-              <label for="tipo" class="form-label">Numero risposte</label>
+              <label for="num" class="form-label">Numero risposte</label>
               <input class="form-control" type="text" th:field="*{num}" placeholder="" onkeyup="BuildFormFields(parseInt(this.value, 10));">
                <div th:if="${numrisposteerr}" class="invalid-feedback" style="display:block;" th:text="'Numeri risposte invalide'" ></div>
              </div>

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.FormDomanda;
 import my.tesi.questionario.entity.FormQuestionario;
+import my.tesi.questionario.entity.FormQuestionarioWrapper;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
 import my.tesi.questionario.entity.Risposta;
@@ -47,11 +48,13 @@ public class QuestionarioController {
 	}
 	
 	@GetMapping("/")
-	public String index(Model theModel) {
+	public String index(Model theModel, HttpSession session) {
 	
 		List<Sessione> sessioni = new ArrayList<>();
 		
 		sessioni = questionarioService.findSessioni();
+		
+		session.removeAttribute("titoloQuestionario");
 
 		theModel.addAttribute("sessioni", sessioni);
 
@@ -250,6 +253,7 @@ public class QuestionarioController {
 	}
 	
 	// CREAZIONE DOMANDA
+	
 	@GetMapping("/surveys/create/question")
 	public String createQuestion(@RequestParam("surveyId") int surveyId, Model theModel, HttpSession session) {
 		
@@ -266,7 +270,7 @@ public class QuestionarioController {
 	
 	@PostMapping("/surveys/create/question/process")
 	public String processNewQuestion(@Valid @ModelAttribute("domanda") FormDomanda formDomanda,
-			BindingResult theBindingResult, Model theModel) {
+			BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
 		
 		if (theBindingResult.hasErrors() || ( (! formDomanda.getTipo().equals("open")) && (formDomanda.getNum() < 2) ) )  {
@@ -314,6 +318,105 @@ public class QuestionarioController {
 		
 		questionarioService.saveDomanda(theDomanda);
 		
+		Object check = session.getAttribute("titoloQuestionario");
+		
+		if (check != null) {
+			return "redirect:/surveys/edit/question?surveyId=" + theDomanda.getId_questionario().getId_questionario();
+		}
+		
+		
 		return "redirect:/surveys/show/survey?Id=" + theDomanda.getId_questionario().getId_questionario();
+	}
+	
+	@GetMapping("/surveys/edit/question")
+	public String editQuestion(@RequestParam("surveyId") int surveyId, Model theModel, HttpSession session) {
+		
+		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
+		
+		List<Domanda> domande = theQuestionario.getDomande();
+		
+		
+		FormQuestionarioWrapper formQuestionarioWrapper = new FormQuestionarioWrapper();
+		
+		formQuestionarioWrapper.setId_questionario(theQuestionario.getId_questionario());
+		
+		List<FormDomanda> formDomande = new ArrayList<>();
+		
+		for(Domanda theDomanda : domande) {
+			
+			FormDomanda theFormDomanda = new FormDomanda();
+			
+			theFormDomanda.setId_questionario(theDomanda.getId_questionario().getId_questionario());
+			
+			theFormDomanda.setId_domanda(theDomanda.getId_domanda());
+			
+			theFormDomanda.setDomanda(theDomanda.getDomanda());
+			
+			theFormDomanda.setNum(theDomanda.getRisposte().size());
+			
+			List<Integer> id_risposte = new ArrayList<>();
+			
+			List<Integer> scores = new ArrayList<>();
+			
+			List<String> risposte = new ArrayList<>();
+			
+			for(Risposta theRisposta : theDomanda.getRisposte()) {
+				
+				id_risposte.add(theRisposta.getId_risposta());
+				
+				scores.add(theRisposta.getScore());
+				
+				risposte.add(theRisposta.getDesrisposta());
+				
+			}
+			
+			theFormDomanda.setTipo(theDomanda.getRisposte().get(0).getTipo());
+			
+			theFormDomanda.setId_risposte(id_risposte);
+			
+			theFormDomanda.setScores(scores);
+			
+			theFormDomanda.setRisposte(risposte);
+			
+			formDomande.add(theFormDomanda);
+			
+		}
+		
+		formQuestionarioWrapper.setFormDomande(formDomande);
+		
+//		System.out.println(formQuestionarioWrapper.toString());
+		
+		session.setAttribute("titoloQuestionario", theQuestionario.getTitolo());
+		
+		theModel.addAttribute("formQuestionarioWrapper", formQuestionarioWrapper);	
+		
+		return "survey-edit-question";
+	}
+	
+	@GetMapping("/surveys/delete/question")
+	public String deleteQuestion(@RequestParam ("Id") int questionId) {
+		
+		Domanda theDomanda = questionarioService.findDomandaById(questionId);
+		
+		int id_questionario = theDomanda.getId_questionario().getId_questionario();
+		
+		questionarioService.deleteDomanda(theDomanda);
+		
+		return "redirect:/surveys/edit/question?surveyId=" + id_questionario;
+	}
+	
+	// ELIMINAZIONE RISPOSTA
+	
+	@GetMapping("/surveys/delete/answer")
+	public String deleteAnswer(@RequestParam ("Id") int answerId) {
+		
+		Risposta theRisposta = questionarioService.findRispostaById(answerId);
+		
+		int id_questionario = theRisposta.getId_questionario().getId_questionario();
+		
+		questionarioService.deleteRisposta(theRisposta);
+		
+		return "redirect:/surveys/edit/question?surveyId=" + id_questionario;
+		
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
 
 public interface QuestionarioService {
@@ -28,9 +29,17 @@ public interface QuestionarioService {
 	
 	
 
+	public Domanda findDomandaById(int questionId);
+
 	public Domanda saveDomanda(Domanda theDomanda);
 
+	public void deleteDomanda(Domanda theDomanda);
+	
+	
 
+	public Risposta findRispostaById(int answerId);
+
+	public void deleteRisposta(Risposta theRisposta);
 	
 
 	

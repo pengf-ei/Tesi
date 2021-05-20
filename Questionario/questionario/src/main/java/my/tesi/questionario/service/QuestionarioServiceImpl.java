@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import my.tesi.questionario.dao.DomandaRepository;
 import my.tesi.questionario.dao.QuestionarioRepository;
+import my.tesi.questionario.dao.RispostaRepository;
 import my.tesi.questionario.dao.SessioneRepository;
 import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
 
 @Service
@@ -24,13 +26,17 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	
 	private DomandaRepository domandaRepository;
 	
+	private RispostaRepository rispostaRepository;
+	
 	@Autowired
 	public QuestionarioServiceImpl(SessioneRepository theSessioneRepository,
 									QuestionarioRepository theQuestionarioRepository,
-									DomandaRepository theDomandaRepository) {
+									DomandaRepository theDomandaRepository,
+									RispostaRepository theRispostaRepository) {
 		sessioneRepository = theSessioneRepository;
 		questionarioRepository = theQuestionarioRepository;
 		domandaRepository = theDomandaRepository;
+		rispostaRepository = theRispostaRepository;
 	}
 
 	@Override
@@ -102,6 +108,23 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 		questionarioRepository.delete(theQuestionario);
 		
 	}
+	
+	@Override
+	public Domanda findDomandaById(int questionId) {
+		
+		Optional<Domanda> domanda = domandaRepository.findById(questionId);
+		
+		Domanda theDomanda = null;
+		
+		if (domanda.isPresent()) {
+			theDomanda = domanda.get();
+		}
+		else {
+			theDomanda = null;
+		}
+				
+		return theDomanda;
+	}
 
 	@Override
 	public Domanda saveDomanda(Domanda theDomanda) {
@@ -109,6 +132,35 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 		return domandaRepository.saveAndFlush(theDomanda);
 	}
 
-	
+	@Override
+	public void deleteDomanda(Domanda theDomanda) {
+		domandaRepository.delete(theDomanda);
+		
+	}
 
+	@Override
+	public Risposta findRispostaById(int answerId) {
+		
+		Optional<Risposta> risposta = rispostaRepository.findById(answerId);
+		
+		Risposta theRisposta = null;
+		
+		if (risposta.isPresent()) {
+			theRisposta = risposta.get();
+		}
+		else {
+			theRisposta = null;
+		}
+		
+		return theRisposta;
+	}
+
+	@Override
+	public void deleteRisposta(Risposta theRisposta) {
+		rispostaRepository.delete(theRisposta);
+		
+	}
+
+
+	
 }

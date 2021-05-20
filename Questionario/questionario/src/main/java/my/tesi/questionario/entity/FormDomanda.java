@@ -22,6 +22,8 @@ public class FormDomanda {
 	
 	private int num;
 	
+	private List<Integer> id_risposte;
+	
 	private List<Integer> scores;
 	
 	private List<String> risposte;
@@ -94,11 +96,21 @@ public class FormDomanda {
 	public void setScores(List<Integer> scores) {
 		this.scores = scores;
 	}
+	
+
+	public List<Integer> getId_risposte() {
+		return id_risposte;
+	}
+
+	public void setId_risposte(List<Integer> id_risposte) {
+		this.id_risposte = id_risposte;
+	}
 
 	@Override
 	public String toString() {
 		return "FormDomanda [id_questionario=" + id_questionario + ", id_domanda=" + id_domanda + ", domanda=" + domanda
-				+ ", tipo=" + tipo + ", num=" + num + ", scores=" + scores + ", risposte=" + risposte + "]";
+				+ ", tipo=" + tipo + ", num=" + num + ", id_risposte=" + id_risposte + ", scores=" + scores
+				+ ", risposte=" + risposte + "]";
 	}
 
 	
