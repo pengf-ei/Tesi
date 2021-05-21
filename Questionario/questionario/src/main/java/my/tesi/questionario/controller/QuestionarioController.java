@@ -22,6 +22,7 @@ import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.FormDomanda;
 import my.tesi.questionario.entity.FormQuestionario;
 import my.tesi.questionario.entity.FormQuestionarioWrapper;
+import my.tesi.questionario.entity.FormRisposta;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
 import my.tesi.questionario.entity.Risposta;
@@ -252,7 +253,7 @@ public class QuestionarioController {
 		return "survey-create-session";
 	}
 	
-	// CREAZIONE DOMANDA
+	// CREAZIONE DOMANDA CON RISPOSTE
 	
 	@GetMapping("/surveys/create/question")
 	public String createQuestion(@RequestParam("surveyId") int surveyId, Model theModel, HttpSession session) {
@@ -418,5 +419,63 @@ public class QuestionarioController {
 		
 		return "redirect:/surveys/edit/question?surveyId=" + id_questionario;
 		
+	}
+	
+	// CREAZIONE SOLO RISPOSTA
+	
+	@GetMapping("/surveys/create/answer")
+	public String createAnswer(@RequestParam ("questionId") int questionId, @RequestParam ("type") String type, Model theModel) {
+		
+		Domanda theDomanda = questionarioService.findDomandaById(questionId);
+		
+		FormRisposta theFormRisposta = new FormRisposta();
+		
+		theFormRisposta.setId_questionario(theDomanda.getId_questionario().getId_questionario());
+		
+		theFormRisposta.setId_domanda(theDomanda.getId_domanda());
+		
+		theFormRisposta.setTipo(type);
+		
+		theModel.addAttribute("risposte", theFormRisposta);
+		
+		return "survey-create-answer";
+	}
+	
+	@PostMapping("/surveys/create/answer/process")
+	public String processNewAnswer(@Valid @ModelAttribute("risposte") FormRisposta formRisposta,
+			BindingResult theBindingResult, Model theModel) {
+		
+		if (theBindingResult.hasErrors() || ( (! formRisposta.getTipo().equals("open")) && (formRisposta.getRisposte().size() < 1) ) )  {
+			
+			theModel.addAttribute("numrisposteerr", "");
+			
+			return "survey-create-answer";
+		 }
+		
+		Domanda theDomanda = questionarioService.findDomandaById(formRisposta.getId_domanda());
+		
+		
+		for (int i = 0; i < formRisposta.getRisposte().size(); i++) {
+			
+			Risposta theRisposta = new Risposta();
+			
+			theRisposta.setId_questionario(theDomanda.getId_questionario());
+			
+			theRisposta.setId_domanda(theDomanda);
+			
+			theRisposta.setId_risposta(formRisposta.getId_risposta());
+			
+			theRisposta.setDesrisposta(formRisposta.getRisposte().get(i));
+			
+			theRisposta.setTipo(formRisposta.getTipo());
+			
+			theRisposta.setScore(formRisposta.getScores().get(i));
+			
+			theDomanda.addRisposta(theRisposta);
+		}
+		
+		questionarioService.saveDomanda(theDomanda);		
+		
+		return "redirect:/surveys/edit/question?surveyId=" + formRisposta.getId_questionario();
 	}
 }

@@ -1,5 +1,7 @@
 package my.tesi.questionario.entity;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 public class FormRisposta {
@@ -12,13 +14,13 @@ public class FormRisposta {
 	private int id_risposta;
 	
 	@NotNull(message = "- campo richiesto")
-	private String desrisposta;
+	private List<String> risposte;
 	
 	@NotNull(message = "- campo richiesto")
 	private String tipo;
 	
 	@NotNull(message = "- campo richiesto")
-	private int score;
+	private List<Integer> scores;
 	
 	public FormRisposta() {
 		
@@ -48,14 +50,6 @@ public class FormRisposta {
 		this.id_risposta = id_risposta;
 	}
 
-	public String getDesrisposta() {
-		return desrisposta;
-	}
-
-	public void setDesrisposta(String desrisposta) {
-		this.desrisposta = desrisposta;
-	}
-
 	public String getTipo() {
 		return tipo;
 	}
@@ -64,14 +58,28 @@ public class FormRisposta {
 		this.tipo = tipo;
 	}
 
-	public int getScore() {
-		return score;
+	public List<String> getRisposte() {
+		return risposte;
 	}
 
-	public void setScore(int score) {
-		this.score = score;
+	public void setRisposte(List<String> risposte) {
+		this.risposte = risposte;
 	}
-	
+
+	public List<Integer> getScores() {
+		return scores;
+	}
+
+	public void setScores(List<Integer> scores) {
+		this.scores = scores;
+	}
+
+	@Override
+	public String toString() {
+		return "FormRisposta [id_questionario=" + id_questionario + ", id_domanda=" + id_domanda + ", id_risposta="
+				+ id_risposta + ", risposte=" + risposte + ", tipo=" + tipo + ", scores=" + scores + "]";
+	}
+
 	
 	
 }
