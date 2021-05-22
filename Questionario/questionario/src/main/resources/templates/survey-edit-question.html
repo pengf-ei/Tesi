@@ -70,7 +70,7 @@
 
       <div class="">
         <h4 class="mb-3">Modificare</h4>
-     <form th:action="@{/surveys/edit/question/process}" 
+     <form th:action="@{/surveys/edit/questions/process}" 
 				th:object="${formQuestionarioWrapper}" method="POST"> 
 				
 				<input class="form-control" type="hidden" th:field="*{id_questionario}" placeholder="">
@@ -124,7 +124,7 @@
 				
 			</div>
 				
-				<div class="row g-3" th:each="risposta, rispStat : *{formDomande[__${itemStat.index}__].risposte}" > <!-- th:if="*{formDomande[__${itemStat.index}__].risposte[0] != null}" -->
+				<div th:id="'rispDomanda' + ${formDomanda.id_domanda} + *{formDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" class="row g-3" th:each="risposta, rispStat : *{formDomande[__${itemStat.index}__].risposte}" > 
 					
 					<input class="form-control" type="hidden" th:field="*{formDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
 									

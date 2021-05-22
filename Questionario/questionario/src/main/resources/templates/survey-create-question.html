@@ -239,7 +239,7 @@
           <hr class="my-4">
 
           <button class="w-100 btn btn-primary btn-lg" type="submit">Continua</button>
-          <a th:href="@{/surveys/edit/question(surveyId=(*{id_questionario}))}" class="w-100 btn btn-outline-secondary btn-lg mt-2" th:if="${session.titoloQuestionario}">Ritorna alla modifica</a>
+          <a th:href="@{/surveys/edit/questions(surveyId=(*{id_questionario}))}" class="w-100 btn btn-outline-secondary btn-lg mt-2" th:if="${session.titoloQuestionario}">Ritorna alla modifica</a>
           <a th:href="@{/}" class="w-100 btn btn-outline-secondary btn-lg mt-2" sec:authorize="hasRole('ROLE_ADMIN')">Home</a>
           
           

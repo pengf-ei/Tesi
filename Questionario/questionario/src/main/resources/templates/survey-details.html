@@ -32,8 +32,8 @@
 	<div sec:authorize="hasRole('ROLE_ADMIN')">
 		<a th:href="@{/registration/showForm}"><button class="btn btn-success mb-3">Crea Utente</button></a>
 		<a th:href="@{/enable/users-list}"><button class="btn btn-success mb-3">Abilitazioni Utente</button></a>
-		<a th:href="@{/surveys/create/question?surveyId=} + ${questionario.id_questionario}"><button class="btn btn-outline-primary mb-3">Aggiungi domanda</button></a>
-		<a th:href="@{/surveys/edit/question?surveyId=} + ${questionario.id_questionario}"><button class="btn btn-outline-primary mb-3">Modifica domande</button></a>
+		<a th:href="@{/surveys/create/question(surveyId=${questionario.id_questionario})}"><button class="btn btn-outline-primary mb-3">Aggiungi domanda</button></a>
+		<a th:href="@{/surveys/edit/questions(surveyId=${questionario.id_questionario})}"><button class="btn btn-outline-primary mb-3">Modifica domande</button></a>
 	</div>
 	
 	<div class="alert alert-warning" role="alert" th:if="${ #lists.isEmpty(questionario.domande)}">

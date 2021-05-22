@@ -114,7 +114,7 @@
 							  <ul class="dropdown-menu" th:aria-labelledby="'session_'+${tempSessione.nomesessione}">
 							    <li><a class="dropdown-item" th:href="@{/surveys/edit/survey(Id=${tempQuestionario.id_questionario})}">Modifica titolo questionario</a></li>
 							    <li><a class="dropdown-item" th:href="@{/surveys/create/question(surveyId=${tempQuestionario.id_questionario})}">Aggiungi domanda</a></li>
-							    <li><a class="dropdown-item" th:href="@{/surveys/edit/question(surveyId=${tempQuestionario.id_questionario})}">Modifica domande</a></li>
+							    <li><a class="dropdown-item" th:href="@{/surveys/edit/questions(surveyId=${tempQuestionario.id_questionario})}">Modifica domande</a></li>
 							  </ul>
 							  
 							  <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#deleteSurvey' + ${tempQuestionario.id_questionario}">

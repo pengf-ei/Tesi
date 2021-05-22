@@ -161,6 +161,11 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 		
 	}
 
+	@Override
+	public Risposta saveRisposta(Risposta theRisposta) {
+		return rispostaRepository.saveAndFlush(theRisposta);
+	}
+
 
 	
 }
