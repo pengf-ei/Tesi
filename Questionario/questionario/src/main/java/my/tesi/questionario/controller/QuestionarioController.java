@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -389,6 +390,8 @@ public class QuestionarioController {
 		
 		session.setAttribute("titoloQuestionario", theQuestionario.getTitolo());
 		
+		session.removeAttribute("fromOpen");
+		
 		theModel.addAttribute("formQuestionarioWrapper", formQuestionarioWrapper);	
 		
 		return "survey-edit-question";
@@ -401,10 +404,19 @@ public class QuestionarioController {
 //		System.out.println(formQuestionarioWrapper.getId_questionario());
 //		System.out.println(formQuestionarioWrapper.getFormDomande());
 
-		if (theBindingResult.hasErrors())  {
+		if (theBindingResult.hasErrors() )  {
 			
 			return "survey-edit-question";
 		 }
+		
+		for (FormDomanda theFormDomanda : formQuestionarioWrapper.getFormDomande()) {
+			if(( ! theFormDomanda.getTipo().equals("open") ) && theFormDomanda.getNum() < 2) {
+				
+				theModel.addAttribute("errorNumberAnswer", "Inserire un numero di risposte non aperte maggiore di 1.");
+				
+				return "survey-edit-question";
+			}
+		}
 		
 		for(int i = 0; i < formQuestionarioWrapper.getFormDomande().size(); i++) {
 			
@@ -436,6 +448,60 @@ public class QuestionarioController {
 		
 		return "redirect:/";
 		
+	}
+	
+	@GetMapping("/survey/edit/questions/fromOpen")
+	@Transactional
+	public String fromOpen(@RequestParam("questionId") int questionId, @RequestParam ("toType") String toType, HttpSession session) {
+		
+		Domanda theDomanda = questionarioService.findDomandaById(questionId);
+		
+		for (Risposta theRisposta : theDomanda.getRisposte()) {
+			
+			int aswerdId = theRisposta.getId_risposta();
+		
+			questionarioService.deleteRispostaById(aswerdId);
+			
+		}
+		
+		session.setAttribute("creazione", "true");
+		
+		session.setAttribute("fromOpen", "true");
+		
+		return "redirect:/surveys/create/answer?questionId=" + questionId + "&type=" + toType; 
+	}
+	
+	@GetMapping("/survey/edit/questions/toOpen")
+	@Transactional
+	public String toOpen(@RequestParam ("questionId") int questionId) {
+		
+		Domanda theDomanda = questionarioService.findDomandaById(questionId);
+		
+		for (Risposta theRisposta : theDomanda.getRisposte()) {
+			
+			int aswerdId = theRisposta.getId_risposta();
+		
+			questionarioService.deleteRispostaById(aswerdId);
+			
+		}
+		
+		Risposta rispostaOpen = new Risposta();
+		
+		rispostaOpen.setId_questionario(theDomanda.getId_questionario());
+		
+		rispostaOpen.setId_domanda(theDomanda);
+		
+		rispostaOpen.setId_risposta(0);
+		
+		rispostaOpen.setDesrisposta(null);
+		
+		rispostaOpen.setScore(0);
+		
+		rispostaOpen.setTipo("open");
+		
+		questionarioService.saveRisposta(rispostaOpen);
+		
+		return "redirect:/surveys/edit/questions?surveyId=" + rispostaOpen.getId_questionario().getId_questionario();
 	}
 	
 	@GetMapping("/surveys/delete/question")
@@ -487,14 +553,24 @@ public class QuestionarioController {
 	
 	@PostMapping("/surveys/create/answer/process")
 	public String processNewAnswer(@Valid @ModelAttribute("risposte") FormRisposta formRisposta,
-			BindingResult theBindingResult, Model theModel) {
+			BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
-		if (theBindingResult.hasErrors() || ( (! formRisposta.getTipo().equals("open")) && (formRisposta.getRisposte().size() < 1) ) )  {
-			
-			theModel.addAttribute("numrisposteerr", "");
-			
-			return "survey-create-answer";
-		 }
+		if (session.getAttribute("fromOpen") == null) {
+			if (theBindingResult.hasErrors() || ( (! formRisposta.getTipo().equals("open")) && (formRisposta.getRisposte().size() < 1) ) )  {
+				
+				theModel.addAttribute("numrisposteerr", "");
+				
+				return "survey-create-answer";
+			}
+		}
+		else {
+			if (theBindingResult.hasErrors() || ( (! formRisposta.getTipo().equals("open")) && (formRisposta.getRisposte().size() < 2) ) )  {
+				
+				theModel.addAttribute("numrisposteerr", "");
+				
+				return "survey-create-answer";
+			}
+		}
 		
 		Domanda theDomanda = questionarioService.findDomandaById(formRisposta.getId_domanda());
 		

@@ -162,6 +162,12 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	}
 
 	@Override
+	public void deleteRispostaById(int answerId) {
+		rispostaRepository.deleteRisposta(answerId);
+		
+	}
+
+	@Override
 	public Risposta saveRisposta(Risposta theRisposta) {
 		return rispostaRepository.saveAndFlush(theRisposta);
 	}

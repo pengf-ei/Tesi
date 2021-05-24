@@ -40,6 +40,8 @@ public interface QuestionarioService {
 	public Risposta findRispostaById(int answerId);
 
 	public void deleteRisposta(Risposta theRisposta);
+	
+	public void deleteRispostaById(int answerId);
 
 	public Risposta saveRisposta(Risposta theRisposta);
 	

@@ -49,7 +49,19 @@
     
   </head>
   <body class="bg-light">
-  
+  <script type="text/javascript">
+  	function cambioTipo(init, final, ir){
+  		
+  		if (init == 'open' && final != 'open' && final != ''){
+  			location.replace("/survey/edit/questions/fromOpen?questionId=" + ir + "&toType=" + final);
+  		}
+  		
+  		if (init != 'open' && final == 'open' && final != ''){
+  			location.replace("/survey/edit/questions/toOpen?questionId=" + ir);
+  		}
+  		
+  	}
+  </script>
       
 <div class="container">
   <main>
@@ -75,13 +87,13 @@
 				
 				<input class="form-control" type="hidden" th:field="*{id_questionario}" placeholder="">
 		
+			<div th:if="${errorNumberAnswer}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+				<span th:text="${errorNumberAnswer}"></span>
+			</div>
+		
            <div th:each="formDomanda, itemStat : *{formDomande}">
 			
 			<div class="row g-3">
-			
-			<div th:if="${registrationError}" class="alert alert-danger col-xs-offset-1 col-xs-10">
-				<span th:text="${registrationError}"></span>
-			</div>
 	
 				<input class="form-control" type="hidden" th:field="*{formDomande[__${itemStat.index}__].id_questionario}" placeholder="">
 				<input class="form-control" type="hidden" th:field="*{formDomande[__${itemStat.index}__].id_domanda}" placeholder="">
@@ -108,7 +120,7 @@
             	
             	<div class="col-sm-4">
 	              <label class="form-label">Tipo di risposta</label>
-	              <select class="form-select" th:field="*{formDomande[__${itemStat.index}__].tipo}">
+	              <select class="form-select" th:field="*{formDomande[__${itemStat.index}__].tipo}" th:data-tp="*{formDomande[__${itemStat.index}__].tipo}" th:data-ir="*{formDomande[__${itemStat.index}__].id_domanda}" onchange="cambioTipo(this.getAttribute('data-tp'), this.value, this.getAttribute('data-ir'))" required>
 	                <option value="">Scegliere...</option>
 	                <option value="radio">Scelta singola</option>
 	                <option value="multi">Scelta multipla</option>
@@ -124,7 +136,7 @@
 				
 			</div>
 				
-				<div th:id="'rispDomanda' + ${formDomanda.id_domanda} + *{formDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" class="row g-3" th:each="risposta, rispStat : *{formDomande[__${itemStat.index}__].risposte}" > 
+				<div class="row g-3" th:each="risposta, rispStat : *{formDomande[__${itemStat.index}__].risposte}" > 
 					
 					<input class="form-control" type="hidden" th:field="*{formDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
 									

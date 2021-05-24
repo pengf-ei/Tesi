@@ -9,8 +9,8 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.82.0">
     
-    <title th:if="${session.creazione == 'true'}">Creazione domanda - Questionario</title>
-    <title th:if="${session.creazione} == 'false'">Modifica domanda - Questionario</title>
+    <title th:if="${session.creazione == 'true'}">Creazione risposte - Questionario</title>
+    <title th:if="${session.creazione} == 'false'">Modifica risposte - Questionario</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/checkout/">
 
@@ -149,7 +149,7 @@
 	
             <div class="col-3" id="NumRisp">
               <label for="num" class="form-label">Numero risposte</label>
-              <input class="form-control" type="text" placeholder="" onkeyup="BuildFormFields(parseInt(this.value, 10));">
+              <input class="form-control" type="text" placeholder="" onkeyup="BuildFormFields(parseInt(this.value, 10));" required>
                <div th:if="${numrisposteerr}" class="invalid-feedback" style="display:block;" th:text="'Numeri risposte invalide'" ></div>
              </div>
              
@@ -163,8 +163,8 @@
           <hr class="my-4">
 
           <button class="w-100 btn btn-primary btn-lg" type="submit">Continua</button>
-          <a th:href="@{/surveys/edit/questions(surveyId=(*{id_questionario}))}" class="w-100 btn btn-outline-secondary btn-lg mt-2" th:if="${session.titoloQuestionario}">Ritorna alla modifica</a>
-          <a th:href="@{/}" class="w-100 btn btn-outline-secondary btn-lg mt-2" sec:authorize="hasRole('ROLE_ADMIN')">Home</a>
+          <a th:href="@{/surveys/edit/questions(surveyId=(*{id_questionario}))}" class="w-100 btn btn-outline-secondary btn-lg mt-2" th:if="${session.fromOpen == null}">Ritorna alla modifica</a><!-- ${session.titoloQuestionario} -->
+          <a th:href="@{/}" class="w-100 btn btn-outline-secondary btn-lg mt-2" sec:authorize="hasRole('ROLE_ADMIN')" th:if="${session.fromOpen == null}">Home</a>
           
           
           
