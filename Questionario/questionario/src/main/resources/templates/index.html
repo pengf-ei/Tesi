@@ -198,7 +198,6 @@
 			</caption>
 			<thead class="table-light">
 				<tr>
-	<!-- 				<th th:text="'Id - ' + ${tempSessione.id}" /> -->
 					<th class="col-sm-2" th:text="${tempSessione.nomesessione}" />
 					<th></th>
 					<th class="col-sm-3">Operazioni</th>
@@ -206,19 +205,14 @@
 			</thead>
 			
 			<tbody>
-			
-		<!-- 	<tr>
-					<th th:text="'Inizio: ' + ${#dates.format(tempSessione.inizio, 'dd-MM-yyyy HH:mm')}" />
-					<th th:text="'Fine: ' + ${#dates.format(tempSessione.fine, 'dd-MM-yyyy HH:mm')}" />
-				</tr> -->
 				
 				<tr th:each="tempQuestionario : ${tempSessione.questionari}">
 				
 					<td th:text="${tempQuestionario.id_questionario}" />	
-					<td th:text="${tempQuestionario.titolo}" />	
+					<td><a th:href="@{/surveys/compile/survey(Id=${tempQuestionario.id_questionario})}" th:text="${tempQuestionario.titolo}" /></a></td>	
 					<td>
-						<a href=""
-							   class="btn btn-info btn-sm">
+						<a th:href="@{/surveys/compile/survey(Id=${tempQuestionario.id_questionario})}"
+							   class="btn btn-outline-primary btn-sm">
 								Compila
 							</a>
 					</td>

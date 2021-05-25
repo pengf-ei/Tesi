@@ -26,6 +26,7 @@ import my.tesi.questionario.entity.FormQuestionarioWrapper;
 import my.tesi.questionario.entity.FormRisposta;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.ReplyDomanda;
 import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
 import my.tesi.questionario.service.QuestionarioService;
@@ -386,7 +387,7 @@ public class QuestionarioController {
 		
 		formQuestionarioWrapper.setFormDomande(formDomande);
 		
-		System.out.println(formQuestionarioWrapper.toString());
+//		System.out.println(formQuestionarioWrapper.toString());
 		
 		session.setAttribute("titoloQuestionario", theQuestionario.getTitolo());
 		
@@ -599,5 +600,58 @@ public class QuestionarioController {
 		return "redirect:/surveys/edit/questions?surveyId=" + formRisposta.getId_questionario();
 	}
 	
+	// COMPILA QUESTIONARIO
+	
+	@GetMapping("/surveys/compile/survey")
+	public String compileSurvey(@RequestParam("Id") int surveyId, Model theModel) {
+		
+		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
+
+		Domanda theDomanda = theQuestionario.getDomande().get(0);
+		
+		ReplyDomanda replyDomanda = new ReplyDomanda();
+		
+		replyDomanda.setId_questionario(theDomanda.getId_questionario().getId_questionario());
+		
+		replyDomanda.setId_domanda(theDomanda.getId_domanda());
+		
+		replyDomanda.setDomanda(theDomanda.getDomanda());
+		
+		replyDomanda.setNum(theDomanda.getRisposte().size());
+		
+		List<Integer> id_risposte = new ArrayList<>();
+		
+		List<Integer> scores = new ArrayList<>();
+		
+		List<String> risposte = new ArrayList<>();
+		
+		for(Risposta theRisposta : theDomanda.getRisposte()) {
+			
+			id_risposte.add(theRisposta.getId_risposta());
+			
+			scores.add(theRisposta.getScore());
+			
+			risposte.add(theRisposta.getDesrisposta());
+			
+		}
+		
+		if(theDomanda.getRisposte().size() > 0) {
+			replyDomanda.setTipo(theDomanda.getRisposte().get(0).getTipo());
+		}
+		
+		replyDomanda.setId_risposte(id_risposte);
+		
+		replyDomanda.setScores(scores);
+		
+		replyDomanda.setRisposte(risposte);
+		
+//		replyDomanda.setIdrispostadata(  ); DA PRENDERE DALLA TABELLA REGISTRO // DA IMPLEMENTARE
+		
+		System.out.println(replyDomanda);
+				
+//		theModel.addAttribute("questionario", theQuestionario);
+		
+		return "redirect:/";
+	}
 	
 }
