@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,15 +28,20 @@ import my.tesi.questionario.entity.FormQuestionarioWrapper;
 import my.tesi.questionario.entity.FormRisposta;
 import my.tesi.questionario.entity.FormSessione;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.RegistroRisposta;
 import my.tesi.questionario.entity.ReplyDomanda;
+import my.tesi.questionario.entity.ReplyQuestionarioWrapper;
 import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
 import my.tesi.questionario.service.QuestionarioService;
+import my.tesi.questionario.service.UserService;
 
 @Controller
 public class QuestionarioController {
 	
 	private QuestionarioService questionarioService;
+	
+	private UserService userService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -46,8 +53,9 @@ public class QuestionarioController {
 	}
 	
 	@Autowired
-	public QuestionarioController(QuestionarioService theQuestionarioService) {
+	public QuestionarioController(QuestionarioService theQuestionarioService, UserService theUserService) {
 		questionarioService = theQuestionarioService;
+		userService = theUserService;
 	}
 	
 	@GetMapping("/")
@@ -605,49 +613,80 @@ public class QuestionarioController {
 	@GetMapping("/surveys/compile/survey")
 	public String compileSurvey(@RequestParam("Id") int surveyId, Model theModel) {
 		
-		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Domanda theDomanda = theQuestionario.getDomande().get(0);
+		String username = null;
 		
-		ReplyDomanda replyDomanda = new ReplyDomanda();
-		
-		replyDomanda.setId_questionario(theDomanda.getId_questionario().getId_questionario());
-		
-		replyDomanda.setId_domanda(theDomanda.getId_domanda());
-		
-		replyDomanda.setDomanda(theDomanda.getDomanda());
-		
-		replyDomanda.setNum(theDomanda.getRisposte().size());
-		
-		List<Integer> id_risposte = new ArrayList<>();
-		
-		List<Integer> scores = new ArrayList<>();
-		
-		List<String> risposte = new ArrayList<>();
-		
-		for(Risposta theRisposta : theDomanda.getRisposte()) {
-			
-			id_risposte.add(theRisposta.getId_risposta());
-			
-			scores.add(theRisposta.getScore());
-			
-			risposte.add(theRisposta.getDesrisposta());
-			
+		if (principal instanceof UserDetails) {
+		  username = ((UserDetails)principal).getUsername();
 		}
 		
-		if(theDomanda.getRisposte().size() > 0) {
-			replyDomanda.setTipo(theDomanda.getRisposte().get(0).getTipo());
+		
+		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
+		
+		List<Domanda> domande = theQuestionario.getDomande();
+
+		
+		ReplyQuestionarioWrapper replyQuestionarioWrapper = new ReplyQuestionarioWrapper();
+		
+		replyQuestionarioWrapper.setId_questionario(theQuestionario.getId_questionario());
+		
+		
+		List<ReplyDomanda> replyDomande = new ArrayList<>();
+		
+		for(Domanda theDomanda : domande) {
+		
+			ReplyDomanda replyDomanda = new ReplyDomanda();
+			
+			replyDomanda.setId_questionario(theDomanda.getId_questionario().getId_questionario());
+			
+			replyDomanda.setId_domanda(theDomanda.getId_domanda());
+			
+			replyDomanda.setDomanda(theDomanda.getDomanda());
+			
+			replyDomanda.setNum(theDomanda.getRisposte().size());
+			
+			List<Integer> id_risposte = new ArrayList<>();
+			
+			List<Integer> scores = new ArrayList<>();
+			
+			List<String> risposte = new ArrayList<>();
+			
+			for(Risposta theRisposta : theDomanda.getRisposte()) {
+				
+				id_risposte.add(theRisposta.getId_risposta());
+				
+				scores.add(theRisposta.getScore());
+				
+				risposte.add(theRisposta.getDesrisposta());
+				
+			}
+			
+			if(theDomanda.getRisposte().size() > 0) {
+				replyDomanda.setTipo(theDomanda.getRisposte().get(0).getTipo());
+			}
+			
+			replyDomanda.setId_risposte(id_risposte);
+			
+			replyDomanda.setScores(scores);
+			
+			replyDomanda.setRisposte(risposte);
+			
+			
+			RegistroRisposta registroRisposta = questionarioService.findByDomandaAndUsername(theDomanda, userService.findByUserName(username));
+			
+			if(registroRisposta != null) {
+				replyDomanda.setIdrispostadata(registroRisposta.getId_risposta_reg().getId_risposta());
+				replyDomanda.setRispapertadata(registroRisposta.getRispaperta());
+			}
+						
+			replyDomande.add(replyDomanda);
+		
 		}
 		
-		replyDomanda.setId_risposte(id_risposte);
+		replyQuestionarioWrapper.setReplyDomande(replyDomande);
 		
-		replyDomanda.setScores(scores);
-		
-		replyDomanda.setRisposte(risposte);
-		
-//		replyDomanda.setIdrispostadata(  ); DA PRENDERE DALLA TABELLA REGISTRO // DA IMPLEMENTARE
-		
-		System.out.println(replyDomanda);
+		System.out.println(replyQuestionarioWrapper);
 				
 //		theModel.addAttribute("questionario", theQuestionario);
 		

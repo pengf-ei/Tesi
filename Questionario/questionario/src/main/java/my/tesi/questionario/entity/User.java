@@ -42,6 +42,9 @@ public class User {
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
 	private List<Authority> authorities;
 	
+	@OneToMany(mappedBy="username_reg", cascade = CascadeType.ALL)
+	private List<RegistroRisposta> registrorisposte;
+	
 	public User() {
 		
 	}
@@ -130,11 +133,13 @@ public class User {
 		this.authorities = authorities;
 	}
 	
-	@Override
-	public String toString() {
-		return "User [userName=" + userName + ", password=" + password + ", enabled=" + enabled + ", nome=" + nome
-				+ ", cognome=" + cognome + ", email=" + email + ", eta=" + eta + ", genere=" + genere + ", authorities="
-				+ authorities + "]";
+	
+	public List<RegistroRisposta> getRegistrorisposte() {
+		return registrorisposte;
+	}
+
+	public void setRegistrorisposte(List<RegistroRisposta> registrorisposte) {
+		this.registrorisposte = registrorisposte;
 	}
 
 	public void addAuthority(Authority auth) {
@@ -145,5 +150,14 @@ public class User {
 		
 		authorities.add(auth);
 	}
+
+	@Override
+	public String toString() {
+		return "User [userName=" + userName + ", password=" + password + ", enabled=" + enabled + ", nome=" + nome
+				+ ", cognome=" + cognome + ", email=" + email + ", eta=" + eta + ", genere=" + genere + ", authorities="
+				+ authorities + ", registrorisposte=" + registrorisposte + "]";
+	}
+	
+	
 	
 }

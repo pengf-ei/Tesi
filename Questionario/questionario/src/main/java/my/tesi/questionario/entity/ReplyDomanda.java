@@ -4,6 +4,8 @@ public class ReplyDomanda extends FormDomanda {
 
 	private int idrispostadata;
 	
+	private String rispapertadata;
+	
 	public ReplyDomanda() {
 		super();
 	}
@@ -16,9 +18,18 @@ public class ReplyDomanda extends FormDomanda {
 		this.idrispostadata = idrispostadata;
 	}
 
+	public String getRispapertadata() {
+		return rispapertadata;
+	}
+
+	public void setRispapertadata(String rispapertadata) {
+		this.rispapertadata = rispapertadata;
+	}
+
 	@Override
 	public String toString() {
-		return "ReplyDomanda [idrispostadata=" + idrispostadata + ", toString()=" + super.toString() + "]";
+		return "ReplyDomanda [idrispostadata=" + idrispostadata + ", rispapertadata=" + rispapertadata + ", toString()="
+				+ super.toString() + "]";
 	}
 
 	

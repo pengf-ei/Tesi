@@ -4,8 +4,10 @@ import java.util.List;
 
 import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.RegistroRisposta;
 import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
+import my.tesi.questionario.entity.User;
 
 public interface QuestionarioService {
 
@@ -44,6 +46,9 @@ public interface QuestionarioService {
 	public void deleteRispostaById(int answerId);
 
 	public Risposta saveRisposta(Risposta theRisposta);
+	
+	
+	public RegistroRisposta findByDomandaAndUsername(Domanda theDomanda, User username);
 	
 
 	

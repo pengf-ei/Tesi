@@ -33,6 +33,9 @@ public class Domanda {
 	@OneToMany(mappedBy="id_domanda", cascade = CascadeType.ALL)
 	private List<Risposta> risposte;
 	
+	@OneToMany(mappedBy="id_domanda_reg", cascade = CascadeType.ALL)
+	private List<RegistroRisposta> registrorisposte;
+	
 	public Domanda() {
 		
 	}
@@ -77,12 +80,21 @@ public class Domanda {
 		
 		risposte.add(theRisposta);
 	}
+	
+
+	public List<RegistroRisposta> getRegistrorisposte() {
+		return registrorisposte;
+	}
+
+	public void setRegistrorisposte(List<RegistroRisposta> registrorisposte) {
+		this.registrorisposte = registrorisposte;
+	}
 
 	@Override
 	public String toString() {
 		return "Domanda [id_questionario=" + id_questionario + ", id_domanda=" + id_domanda + ", domanda=" + domanda
-				+ ", risposte=" + risposte + "]";
+				+ ", risposte=" + risposte + ", registrorisposte=" + registrorisposte + "]";
 	}
-	
+
 
 }

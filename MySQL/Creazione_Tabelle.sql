@@ -131,7 +131,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `questionario`.`registrorisposte`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `questionario`.`registrorisposte` (
-  `id_registro` INT NOT NULL,
+  `id_registro` INT NOT NULL AUTO_INCREMENT,
   `id_questionario` INT NOT NULL,
   `id_domanda` INT NOT NULL,
   `id_risposta` INT NOT NULL,
@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `questionario`.`registrorisposte` (
     FOREIGN KEY (`username`)
     REFERENCES `questionario`.`users` (`username`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 

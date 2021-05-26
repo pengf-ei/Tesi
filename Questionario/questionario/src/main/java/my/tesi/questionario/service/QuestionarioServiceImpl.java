@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 
 import my.tesi.questionario.dao.DomandaRepository;
 import my.tesi.questionario.dao.QuestionarioRepository;
+import my.tesi.questionario.dao.RegistroRispostaRepository;
 import my.tesi.questionario.dao.RispostaRepository;
 import my.tesi.questionario.dao.SessioneRepository;
 import my.tesi.questionario.entity.Domanda;
 import my.tesi.questionario.entity.Questionario;
+import my.tesi.questionario.entity.RegistroRisposta;
 import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
+import my.tesi.questionario.entity.User;
 
 @Service
 public class QuestionarioServiceImpl implements QuestionarioService {
@@ -28,15 +31,19 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	
 	private RispostaRepository rispostaRepository;
 	
+	private RegistroRispostaRepository registroRispostaRepository;
+	
 	@Autowired
 	public QuestionarioServiceImpl(SessioneRepository theSessioneRepository,
 									QuestionarioRepository theQuestionarioRepository,
 									DomandaRepository theDomandaRepository,
-									RispostaRepository theRispostaRepository) {
+									RispostaRepository theRispostaRepository,
+									RegistroRispostaRepository theRegistroRispostaRepository) {
 		sessioneRepository = theSessioneRepository;
 		questionarioRepository = theQuestionarioRepository;
 		domandaRepository = theDomandaRepository;
 		rispostaRepository = theRispostaRepository;
+		registroRispostaRepository = theRegistroRispostaRepository;
 	}
 
 	@Override
@@ -170,6 +177,11 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	@Override
 	public Risposta saveRisposta(Risposta theRisposta) {
 		return rispostaRepository.saveAndFlush(theRisposta);
+	}
+
+	@Override
+	public RegistroRisposta findByDomandaAndUsername(Domanda theDomanda, User username) {
+		return registroRispostaRepository.findByDomandaAndUsername(theDomanda, username);
 	}
 
 

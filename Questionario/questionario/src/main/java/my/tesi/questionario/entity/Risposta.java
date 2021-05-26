@@ -1,5 +1,8 @@
 package my.tesi.questionario.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -34,6 +38,9 @@ public class Risposta {
 	
 	@Column(name="score")
 	private int score;
+	
+	@OneToMany(mappedBy="id_risposta_reg", cascade = CascadeType.ALL)
+	private List<RegistroRisposta> registroRisposte;
 	
 	public Risposta() {
 		
@@ -90,9 +97,10 @@ public class Risposta {
 	@Override
 	public String toString() {
 		return "Risposta [id_questionario=" + id_questionario + ", id_domanda=" + id_domanda + ", id_risposta="
-				+ id_risposta + ", desrisposta=" + desrisposta + ", tipo=" + tipo + ", score=" + score + "]";
+				+ id_risposta + ", desrisposta=" + desrisposta + ", tipo=" + tipo + ", score=" + score
+				+ ", registroRisposte=" + registroRisposte + "]";
 	}
-	
+
 	
 
 }
