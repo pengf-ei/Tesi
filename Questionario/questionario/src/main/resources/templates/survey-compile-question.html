@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.82.0">
+    
+    <title>Compila domande - Questionario</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/checkout/">
+
+ <!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+	crossorigin="anonymous">
+	
+	
+<meta name="theme-color" content="#7952b3">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+        
+        
+      }
+      
+      .container {
+  		max-width: 760px;
+	}
+    </style>
+    
+    <script type="text/javascript">
+    	function checkRispostaAperta(pos, td){
+    		var doc = document.getElementById("replyDomande" + pos + ".idrispostadata");
+    		
+    		doc.value = td;
+    		
+    	}
+    </script>
+
+    
+  </head>
+  <body class="bg-light">
+
+      
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+</svg>
+
+ 
+      <h2 th:text="${session.titoloQuestionario}"></h2>
+      <p class="lead">Compila il questionario</p>
+    </div>
+
+    <div class="row g-5">
+
+      <div class="">
+        <h4 class="mb-3">Inserire</h4>
+     <form th:action="@{/surveys/compile/questions/process}" 
+				th:object="${replyQuestionarioWrapper}" method="POST"> 
+				
+				<input class="form-control" type="hidden" th:field="*{id_questionario}" placeholder="">
+		
+ <!--		<div th:if="${errorNumberAnswer}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+				<span th:text="${errorNumberAnswer}"></span>
+			</div>
+	-->	
+           <div th:each="replyDomanda, itemStat : *{replyDomande}">
+			
+			<div class="row g-3">
+	
+				<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_questionario}" placeholder="">
+				<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_domanda}" placeholder="">
+				
+ 				<div class="col-12">
+	             	 <h4 class="form-label" th:text="(${itemStat.index} + 1) + '. ' + *{replyDomande[__${itemStat.index}__].domanda}"></h4>
+	              		<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].domanda}" placeholder="">
+	              	<div class="input-group">
+	     			     
+		        		<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].tipo}" placeholder="">
+		
+		           	 </div>
+            	</div>
+    		
+				<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].num}" placeholder="">	
+				
+				<div class="mx-3 form-check" th:each="risposta, rispStat : *{replyDomande[__${itemStat.index}__].risposte}" th:if="*{replyDomande[__${itemStat.index}__].tipo == 'radio'}" >
+				 		
+			 		<input th:field="*{replyDomande[__${itemStat.index}__].idrispostadata}" class="form-check-input" type="radio" th:name="'answer' + *{replyDomande[__${itemStat.index}__].id_domanda}" th:value="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:id="'answer' + *{replyDomande[__${itemStat.index}__].id_domanda} + '_' + *{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}">
+						
+						<label class="form-check-label" th:for="'answer' + *{replyDomande[__${itemStat.index}__].id_domanda} + '_' + *{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:text="${rispStat.index + 1} + '. ' + *{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}" ></label>
+				
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
+						
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].scores[__${rispStat.index}__]}" placeholder="Punteggio">
+				
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}" placeholder="">
+						
+				</div>
+				
+				<div class="mx-3 form-check" th:each="risposta, rispStat : *{replyDomande[__${itemStat.index}__].risposte}" th:if="*{replyDomande[__${itemStat.index}__].tipo == 'multi'}" >
+				 		
+			 		<input th:field="*{replyDomande[__${itemStat.index}__].idrispostadata}" class="form-check-input" type="checkbox"  th:value="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:id="'answer' + *{replyDomande[__${itemStat.index}__].id_domanda} + '_' + *{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}">
+						
+						<label class="form-check-label" th:for="'answer' + *{replyDomande[__${itemStat.index}__].id_domanda} + '_' + *{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:text="${rispStat.index + 1} + '. ' + *{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}" ></label>
+				
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
+						
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].scores[__${rispStat.index}__]}" placeholder="Punteggio">
+				
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}" placeholder="">
+						
+				</div>
+				
+				<div class="col-9 form-check" th:if="*{replyDomande[__${itemStat.index}__].tipo == 'list'}">
+		 			<select class="form-select" aria-label="Default select example" th:field="*{replyDomande[__${itemStat.index}__].idrispostadata}">
+							<option value="">Scegliere...</option>
+							<option th:each="risposta, rispStat : *{replyDomande[__${itemStat.index}__].risposte}" th:value="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:text="${rispStat.index + 1} + '. ' + *{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}"></option>
+						</select>
+						
+						<div style="dispaly:none;" th:each="risposta, rispStat : *{replyDomande[__${itemStat.index}__].risposte}" >
+						
+							<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
+						
+							<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].scores[__${rispStat.index}__]}" placeholder="Punteggio">
+					
+							<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}" placeholder="">
+						
+						</div>
+				</div>
+				
+				<div class="mx-3 col-9 form-group" th:each="risposta, rispStat : *{replyDomande[__${itemStat.index}__].risposte}" th:if="*{replyDomande[__${itemStat.index}__].tipo == 'open'}">
+					    
+					    <input th:field="*{replyDomande[__${itemStat.index}__].idrispostadata}" class="form-check-input" type="hidden" >
+			 		    
+					    <textarea th:field="*{replyDomande[__${itemStat.index}__].rispapertadata}" class="form-control" rows="3" th:data-td="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:data-pos="${itemStat.index}" onkeydown="checkRispostaAperta(this.getAttribute('data-pos'),this.getAttribute('data-td'));"></textarea>
+					    
+					    <input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
+						
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].scores[__${rispStat.index}__]}" placeholder="Punteggio">
+					
+						<input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].risposte[__${rispStat.index}__]}" placeholder="">
+				
+				</div>
+						
+			</div>
+	 			
+	 					
+				<hr class="my-4">			
+			
+	        </div> 
+	          
+
+          <button class="w-100 btn btn-primary btn-lg" type="submit">Salva</button>
+          
+          <a th:href="@{/}" class="w-100 btn btn-outline-secondary btn-lg mt-2">Home</a>
+          
+          
+          
+        </form>
+ 
+        
+      </div>
+    </div>
+  </main>
+
+  <footer class="my-5 text-muted text-center text-small">
+    <p class="mb-1">&copy; Questionario 2021</p>
+  </footer>
+</div>
+
+
+    <script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+		crossorigin="anonymous"></script>
+
+		
+  </body>
+</html>

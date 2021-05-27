@@ -611,7 +611,7 @@ public class QuestionarioController {
 	// COMPILA QUESTIONARIO
 	
 	@GetMapping("/surveys/compile/survey")
-	public String compileSurvey(@RequestParam("Id") int surveyId, Model theModel) {
+	public String compileSurvey(@RequestParam("Id") int surveyId, Model theModel, HttpSession session) {
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -673,11 +673,20 @@ public class QuestionarioController {
 			replyDomanda.setRisposte(risposte);
 			
 			
-			RegistroRisposta registroRisposta = questionarioService.findByDomandaAndUsername(theDomanda, userService.findByUserName(username));
+			List<RegistroRisposta> registroRisposte = questionarioService.findByDomandaAndUsername(theDomanda, userService.findByUserName(username));
 			
-			if(registroRisposta != null) {
-				replyDomanda.setIdrispostadata(registroRisposta.getId_risposta_reg().getId_risposta());
-				replyDomanda.setRispapertadata(registroRisposta.getRispaperta());
+			if(registroRisposte != null) {
+				
+				List<Integer> idrispostadata = new ArrayList<>();
+				
+				for(RegistroRisposta theRegistroRisposta : registroRisposte) {
+					idrispostadata.add(theRegistroRisposta.getId_risposta_reg().getId_risposta());
+					
+					replyDomanda.setRispapertadata(theRegistroRisposta.getRispaperta());
+				}
+				
+				replyDomanda.setIdrispostadata(idrispostadata);
+				
 			}
 						
 			replyDomande.add(replyDomanda);
@@ -687,8 +696,19 @@ public class QuestionarioController {
 		replyQuestionarioWrapper.setReplyDomande(replyDomande);
 		
 		System.out.println(replyQuestionarioWrapper);
+		
+		session.setAttribute("titoloQuestionario", theQuestionario.getTitolo());
 				
-//		theModel.addAttribute("questionario", theQuestionario);
+		theModel.addAttribute("replyQuestionarioWrapper", replyQuestionarioWrapper);
+		
+		return "survey-compile-question";
+	}
+	
+	@PostMapping("surveys/compile/questions/process")
+	public String processCompileSurvey(@Valid @ModelAttribute("replyQuestionarioWrapper") ReplyQuestionarioWrapper replyQuestionarioWrapper,
+			BindingResult theBindingResult, Model theModel) {
+		
+		System.out.println(replyQuestionarioWrapper);
 		
 		return "redirect:/";
 	}

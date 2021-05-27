@@ -48,7 +48,7 @@ public interface QuestionarioService {
 	public Risposta saveRisposta(Risposta theRisposta);
 	
 	
-	public RegistroRisposta findByDomandaAndUsername(Domanda theDomanda, User username);
+	public List<RegistroRisposta> findByDomandaAndUsername(Domanda theDomanda, User username);
 	
 
 	

@@ -1,8 +1,10 @@
 package my.tesi.questionario.entity;
 
+import java.util.List;
+
 public class ReplyDomanda extends FormDomanda {
 
-	private int idrispostadata;
+	private List<Integer> idrispostadata;
 	
 	private String rispapertadata;
 	
@@ -10,11 +12,11 @@ public class ReplyDomanda extends FormDomanda {
 		super();
 	}
 
-	public int getIdrispostadata() {
+	public List<Integer> getIdrispostadata() {
 		return idrispostadata;
 	}
 
-	public void setIdrispostadata(int idrispostadata) {
+	public void setIdrispostadata(List<Integer> idrispostadata) {
 		this.idrispostadata = idrispostadata;
 	}
 
@@ -32,6 +34,5 @@ public class ReplyDomanda extends FormDomanda {
 				+ super.toString() + "]";
 	}
 
-	
 
 }
