@@ -49,8 +49,9 @@
     <script type="text/javascript">
     	function checkRispostaAperta(pos, td){
     		var doc = document.getElementById("replyDomande" + pos + ".idrispostadata");
-    		
-    		doc.value = td;
+    		if(doc.value != ""){
+    			
+    		}else {doc.value = td;}
     		
     	}
     </script>

@@ -184,8 +184,16 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 		return registroRispostaRepository.findByDomandaAndUsername(theDomanda, username);
 	}
 
-	
+	@Override
+	public void deleteRegistroRisposta(RegistroRisposta theRegistroRisposta) {
+		registroRispostaRepository.delete(theRegistroRisposta);
+		
+	}
 
+	@Override
+	public RegistroRisposta saveRegistroRisposta(RegistroRisposta saveRegistroRisposta) {
+		return registroRispostaRepository.saveAndFlush(saveRegistroRisposta);
+	}
 
 	
 }

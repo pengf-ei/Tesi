@@ -1,6 +1,7 @@
 package my.tesi.questionario.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -33,6 +34,7 @@ import my.tesi.questionario.entity.ReplyDomanda;
 import my.tesi.questionario.entity.ReplyQuestionarioWrapper;
 import my.tesi.questionario.entity.Risposta;
 import my.tesi.questionario.entity.Sessione;
+import my.tesi.questionario.entity.User;
 import my.tesi.questionario.service.QuestionarioService;
 import my.tesi.questionario.service.UserService;
 
@@ -695,7 +697,7 @@ public class QuestionarioController {
 		
 		replyQuestionarioWrapper.setReplyDomande(replyDomande);
 		
-		System.out.println(replyQuestionarioWrapper);
+//		System.out.println(replyQuestionarioWrapper);
 		
 		session.setAttribute("titoloQuestionario", theQuestionario.getTitolo());
 				
@@ -710,7 +712,63 @@ public class QuestionarioController {
 		
 		System.out.println(replyQuestionarioWrapper);
 		
-		return "redirect:/";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String username = null;
+		
+		if (principal instanceof UserDetails) {
+		  username = ((UserDetails)principal).getUsername();
+		}
+		
+		User currentUser = userService.findByUserName(username);
+		
+		for(ReplyDomanda theReplyDomanda : replyQuestionarioWrapper.getReplyDomande()) {
+			
+			if(theReplyDomanda.getIdrispostadata() != null) {
+				
+				List<RegistroRisposta> registroRisposte = questionarioService.findByDomandaAndUsername(questionarioService.findDomandaById(theReplyDomanda.getId_domanda()), currentUser);
+				
+				for(RegistroRisposta theRegistroRisposta : registroRisposte) {
+										
+					questionarioService.deleteRegistroRisposta(theRegistroRisposta);
+					
+				}
+				
+				Questionario theQuestionario = questionarioService.findQuestionarioById(theReplyDomanda.getId_questionario());
+				
+				Domanda theDomanda = questionarioService.findDomandaById(theReplyDomanda.getId_domanda());
+				
+				for(int idrispostadata : theReplyDomanda.getIdrispostadata()) {
+									
+					RegistroRisposta saveRegistroRisposta = new RegistroRisposta();
+					
+					saveRegistroRisposta.setId_registro(0);
+					
+					saveRegistroRisposta.setId_questionario_reg(theQuestionario);
+					
+					saveRegistroRisposta.setId_domanda_reg(theDomanda);
+					
+					saveRegistroRisposta.setId_risposta_reg(questionarioService.findRispostaById(idrispostadata));
+					
+					if(theReplyDomanda.getTipo().equals("open")) {
+						
+						saveRegistroRisposta.setRispaperta(theReplyDomanda.getRispapertadata());
+						
+					}
+					
+					saveRegistroRisposta.setUsername_reg(currentUser);
+					
+					saveRegistroRisposta.setDatacompilazione(new Date());
+					
+					questionarioService.saveRegistroRisposta(saveRegistroRisposta);				
+				
+				}
+				
+			}
+			
+		}
+		
+		return "survey-compile-question-success";
 	}
 	
 }

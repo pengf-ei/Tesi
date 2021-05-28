@@ -50,6 +50,10 @@ public interface QuestionarioService {
 	
 	public List<RegistroRisposta> findByDomandaAndUsername(Domanda theDomanda, User username);
 	
+	public void deleteRegistroRisposta(RegistroRisposta theRegistroRisposta);
+
+	public RegistroRisposta saveRegistroRisposta(RegistroRisposta saveRegistroRisposta);
+	
 
 	
 }
