@@ -1,5 +1,6 @@
 package my.tesi.questionario.controller;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class RegistrationController {
 	}
 	
 	@PostMapping("/processForm")
+	@Transactional
 	public String processForm(@Valid @ModelAttribute("formUser") FormUser formUser, 
 			BindingResult theBindingResult, 
 			Model theModel, Authentication authentication) {

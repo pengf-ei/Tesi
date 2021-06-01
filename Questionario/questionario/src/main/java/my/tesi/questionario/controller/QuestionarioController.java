@@ -90,6 +90,7 @@ public class QuestionarioController {
 	// ELIMINAZIONE LOGICA QUESTIONARIO
 	
 	@GetMapping("/surveys/delete/survey")
+	@Transactional
 	public String deleteSurvey(@RequestParam("Id") int surveyId) {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
@@ -109,6 +110,7 @@ public class QuestionarioController {
 	// RIABILITAZIONE QUESTIONARIO
 	
 	@GetMapping("/surveys/restore")
+	@Transactional
 	public String restoreSurvey(@RequestParam("surveyId") int surveyId, @RequestParam("sessionId") int sessionId, Model theModel) {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
@@ -160,6 +162,7 @@ public class QuestionarioController {
 	}
 	
 	@PostMapping("/surveys/create/survey/process")
+	@Transactional
 	public String processNewSurvey(@Valid @ModelAttribute("questionario") FormQuestionario formQuestionario,
 			BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
@@ -196,6 +199,7 @@ public class QuestionarioController {
 	}
 	
 	@PostMapping("/surveys/create/session/process")
+	@Transactional
 	public String processNewSession(@Valid @ModelAttribute("sessione") FormSessione formSessione,
 									BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
@@ -231,6 +235,7 @@ public class QuestionarioController {
 	// ELIMINAZIONE FISICA SESSIONE
 	
 	@GetMapping("/surveys/delete/session")
+	@Transactional
 	public String deleteSession(@RequestParam("Id") int sessionId) {
 		
 		Sessione theSessione  = questionarioService.findSessioneById(sessionId);
@@ -280,6 +285,7 @@ public class QuestionarioController {
 	}
 	
 	@PostMapping("/surveys/create/question/process")
+	@Transactional
 	public String processNewQuestion(@Valid @ModelAttribute("domanda") FormDomanda formDomanda,
 			BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
@@ -409,6 +415,7 @@ public class QuestionarioController {
 	}
 	
 	@PostMapping("surveys/edit/questions/process")
+	@Transactional
 	public String processEditQuestions(@Valid @ModelAttribute("formQuestionarioWrapper") FormQuestionarioWrapper formQuestionarioWrapper,
 			BindingResult theBindingResult, Model theModel) {
 		
@@ -516,6 +523,7 @@ public class QuestionarioController {
 	}
 	
 	@GetMapping("/surveys/delete/question")
+	@Transactional
 	public String deleteQuestion(@RequestParam ("Id") int questionId) {
 		
 		Domanda theDomanda = questionarioService.findDomandaById(questionId);
@@ -530,6 +538,7 @@ public class QuestionarioController {
 	// ELIMINAZIONE RISPOSTA
 	
 	@GetMapping("/surveys/delete/answer")
+	@Transactional
 	public String deleteAnswer(@RequestParam ("Id") int answerId) {
 		
 		Risposta theRisposta = questionarioService.findRispostaById(answerId);
@@ -563,6 +572,7 @@ public class QuestionarioController {
 	}
 	
 	@PostMapping("/surveys/create/answer/process")
+	@Transactional
 	public String processNewAnswer(@Valid @ModelAttribute("risposte") FormRisposta formRisposta,
 			BindingResult theBindingResult, Model theModel, HttpSession session) {
 		
@@ -707,6 +717,7 @@ public class QuestionarioController {
 	}
 	
 	@PostMapping("surveys/compile/questions/process")
+	@Transactional
 	public String processCompileSurvey(@Valid @ModelAttribute("replyQuestionarioWrapper") ReplyQuestionarioWrapper replyQuestionarioWrapper,
 			BindingResult theBindingResult, Model theModel) {
 		

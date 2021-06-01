@@ -40,43 +40,4 @@ public class UserController {
 		
 	}
 	
-	/*
-	@PostMapping("/processForm")
-	public String processForm(@Valid @ModelAttribute("formUser") FormUser formUser, 
-			BindingResult theBindingResult, 
-			Model theModel, Authentication authentication) {
-		
-		
-		 if (theBindingResult.hasErrors()) {
-			  return "registration-bootstrap";
-		 }
-		
-		 
-		 User theUser = userService.findByUserName(formUser.getUserName());
-		 if (theUser != null) {
-			 
-			 theModel.addAttribute("formUser", new FormUser());
-			 theModel.addAttribute("registrationError", "Username già esistente.");
-			 
-			 return "registration-bootstrap";
-		 }
-		 
-		 userService.save(formUser);
-		
-		 // se utente registrato da admin reindirizzo ad un altra pagina
-		 try {
-			if ( authentication.getAuthorities().toString().contains("ADMIN") ) {
-				 
-				 return "registration-success";
-			 }
-		} catch (Exception e) {
-			
-		}
-		    	 
-		 
-		 theModel.addAttribute("registrationSuccess", "Utenza registrata.");
-		 
-		 return "login-bootstrap";
-	}
-	*/
 }
