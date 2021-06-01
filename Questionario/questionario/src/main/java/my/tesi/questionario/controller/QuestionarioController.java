@@ -633,8 +633,9 @@ public class QuestionarioController {
 		  username = ((UserDetails)principal).getUsername();
 		}
 		
-		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
+		
+		// ACCESSO NEGATO SE FUORI TIMESLOT DELLA SESSIONE
 		
 		Date dataOggi = new Date();
 		
@@ -645,7 +646,6 @@ public class QuestionarioController {
 		}
 		
 		List<Domanda> domande = theQuestionario.getDomande();
-
 		
 		ReplyQuestionarioWrapper replyQuestionarioWrapper = new ReplyQuestionarioWrapper();
 		
