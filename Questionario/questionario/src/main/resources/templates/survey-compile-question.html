@@ -74,6 +74,8 @@
  
       <h2 th:text="${session.titoloQuestionario}"></h2>
       <p class="lead">Compila il questionario</p>
+      <p class="lead" th:if="${replyQuestionarioWrapper.punteggioTot != 0}" th:text="'Punteggio ottenuto: ' + ${replyQuestionarioWrapper.punteggioTot}"></p>
+      
     </div>
 
     <div class="row g-5">

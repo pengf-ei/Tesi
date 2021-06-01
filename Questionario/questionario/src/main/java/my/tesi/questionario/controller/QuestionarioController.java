@@ -636,6 +636,14 @@ public class QuestionarioController {
 		
 		Questionario theQuestionario = questionarioService.findQuestionarioById(surveyId);
 		
+		Date dataOggi = new Date();
+		
+		if(! (theQuestionario.getId_sessione().getInizio().before(dataOggi) && theQuestionario.getId_sessione().getFine().after(dataOggi))) {
+			
+			return "access-denied";
+			
+		}
+		
 		List<Domanda> domande = theQuestionario.getDomande();
 
 		
@@ -643,8 +651,9 @@ public class QuestionarioController {
 		
 		replyQuestionarioWrapper.setId_questionario(theQuestionario.getId_questionario());
 		
-		
 		List<ReplyDomanda> replyDomande = new ArrayList<>();
+		
+		int punteggioTot = 0;
 		
 		for(Domanda theDomanda : domande) {
 		
@@ -687,14 +696,19 @@ public class QuestionarioController {
 			
 			List<RegistroRisposta> registroRisposte = questionarioService.findByDomandaAndUsername(theDomanda, userService.findByUserName(username));
 			
+			
 			if(registroRisposte != null) {
 				
 				List<Integer> idrispostadata = new ArrayList<>();
 				
 				for(RegistroRisposta theRegistroRisposta : registroRisposte) {
+					
 					idrispostadata.add(theRegistroRisposta.getId_risposta_reg().getId_risposta());
 					
 					replyDomanda.setRispapertadata(theRegistroRisposta.getRispaperta());
+					
+					punteggioTot = punteggioTot + theRegistroRisposta.getPunteggio();
+					
 				}
 				
 				replyDomanda.setIdrispostadata(idrispostadata);
@@ -706,6 +720,8 @@ public class QuestionarioController {
 		}
 		
 		replyQuestionarioWrapper.setReplyDomande(replyDomande);
+		
+		replyQuestionarioWrapper.setPunteggioTot(punteggioTot);
 		
 //		System.out.println(replyQuestionarioWrapper);
 		
@@ -759,7 +775,11 @@ public class QuestionarioController {
 					
 					saveRegistroRisposta.setId_domanda_reg(theDomanda);
 					
-					saveRegistroRisposta.setId_risposta_reg(questionarioService.findRispostaById(idrispostadata));
+					Risposta theRispostaData = questionarioService.findRispostaById(idrispostadata);
+					
+					saveRegistroRisposta.setId_risposta_reg(theRispostaData);
+					
+					saveRegistroRisposta.setPunteggio(theRispostaData.getScore());
 					
 					if(theReplyDomanda.getTipo().equals("open")) {
 						

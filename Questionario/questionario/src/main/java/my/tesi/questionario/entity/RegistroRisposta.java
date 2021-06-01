@@ -46,6 +46,9 @@ public class RegistroRisposta {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="datacompilazione")
 	private Date datacompilazione;
+	
+	@Column(name="punteggio")
+	private int punteggio;
 
 	public RegistroRisposta() {
 		
@@ -107,12 +110,22 @@ public class RegistroRisposta {
 		this.datacompilazione = datacompilazione;
 	}
 
+	public int getPunteggio() {
+		return punteggio;
+	}
+
+	public void setPunteggio(int punteggio) {
+		this.punteggio = punteggio;
+	}
+
 	@Override
 	public String toString() {
 		return "RegistroRisposta [id_registro=" + id_registro + ", id_questionario_reg=" + id_questionario_reg
 				+ ", id_domanda_reg=" + id_domanda_reg + ", id_risposta_reg=" + id_risposta_reg + ", rispaperta="
-				+ rispaperta + ", username_reg=" + username_reg + ", datacompilazione=" + datacompilazione + "]";
+				+ rispaperta + ", username_reg=" + username_reg + ", datacompilazione=" + datacompilazione
+				+ ", punteggio=" + punteggio + "]";
 	}
-	
+
+		
 
 }

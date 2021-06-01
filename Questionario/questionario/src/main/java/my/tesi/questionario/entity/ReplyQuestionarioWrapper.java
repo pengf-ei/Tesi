@@ -6,6 +6,8 @@ public class ReplyQuestionarioWrapper {
 	
 	private int id_questionario;
 	
+	private int punteggioTot;
+	
 	private List<ReplyDomanda> replyDomande;
 
 	public int getId_questionario() {
@@ -24,12 +26,20 @@ public class ReplyQuestionarioWrapper {
 		this.replyDomande = replyDomande;
 	}
 
+	public int getPunteggioTot() {
+		return punteggioTot;
+	}
+
+	public void setPunteggioTot(int punteggioTot) {
+		this.punteggioTot = punteggioTot;
+	}
+
 	@Override
 	public String toString() {
-		return "ReplyQuestionarioWrapper [id_questionario=" + id_questionario + ", replyDomande=" + replyDomande + "]";
+		return "ReplyQuestionarioWrapper [id_questionario=" + id_questionario + ", punteggioTot=" + punteggioTot
+				+ ", replyDomande=" + replyDomande + "]";
 	}
 
 
-	
 
 }
