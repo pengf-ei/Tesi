@@ -710,7 +710,7 @@ public class QuestionarioController {
 	public String processCompileSurvey(@Valid @ModelAttribute("replyQuestionarioWrapper") ReplyQuestionarioWrapper replyQuestionarioWrapper,
 			BindingResult theBindingResult, Model theModel) {
 		
-		System.out.println(replyQuestionarioWrapper);
+//		System.out.println(replyQuestionarioWrapper);
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

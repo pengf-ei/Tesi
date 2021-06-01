@@ -157,7 +157,7 @@
 					    
 					    <input th:field="*{replyDomande[__${itemStat.index}__].idrispostadata}" class="form-check-input" type="hidden" >
 			 		    
-					    <textarea th:field="*{replyDomande[__${itemStat.index}__].rispapertadata}" class="form-control" rows="3" th:data-td="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:data-pos="${itemStat.index}" onkeydown="checkRispostaAperta(this.getAttribute('data-pos'),this.getAttribute('data-td'));"></textarea>
+					    <textarea placeholder="(Max 200 caratteri)" maxlength="200" th:field="*{replyDomande[__${itemStat.index}__].rispapertadata}" class="form-control" rows="3" th:data-td="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" th:data-pos="${itemStat.index}" onkeydown="checkRispostaAperta(this.getAttribute('data-pos'),this.getAttribute('data-td'));"></textarea>
 					    
 					    <input class="form-control" type="hidden" th:field="*{replyDomande[__${itemStat.index}__].id_risposte[__${rispStat.index}__]}" placeholder="">
 						
