@@ -799,6 +799,8 @@ public class QuestionarioController {
 			
 		}
 		
+		theModel.addAttribute("id_questionario", replyQuestionarioWrapper.getId_questionario());
+		
 		return "survey-compile-question-success";
 	}
 	
